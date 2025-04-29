@@ -9,6 +9,37 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Hamburger menu functionality
+  const hamburgerMenu = document.querySelector(".hamburger-menu");
+  const headerRight = document.querySelector(".header-right");
+
+  if (hamburgerMenu) {
+    hamburgerMenu.addEventListener("click", () => {
+      hamburgerMenu.classList.toggle("active");
+      headerRight.classList.toggle("active");
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll(".header-right a").forEach((link) => {
+      link.addEventListener("click", () => {
+        hamburgerMenu.classList.remove("active");
+        headerRight.classList.remove("active");
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        !e.target.closest(".hamburger-menu") &&
+        !e.target.closest(".header-right") &&
+        headerRight.classList.contains("active")
+      ) {
+        hamburgerMenu.classList.remove("active");
+        headerRight.classList.remove("active");
+      }
+    });
+  }
+
   // Add animation to the big name
   const nameElements = document.querySelectorAll(".big-name h1");
   nameElements.forEach((el, index) => {

@@ -53,6 +53,38 @@ header {
   font-family: "Bubble Garden Regular";
 }
 
+/* Hamburger Menu */
+.hamburger-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 24px;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.hamburger-menu .bar1,
+.hamburger-menu .bar2,
+.hamburger-menu .bar3 {
+  width: 100%;
+  height: 3px;
+  background-color: #e67bb7;
+  transition: all 0.3s ease;
+}
+
+.hamburger-menu.active .bar1 {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar2 {
+  opacity: 0;
+}
+
+.hamburger-menu.active .bar3 {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
 .header-right ul {
   display: flex;
   gap: 2rem;
@@ -107,7 +139,7 @@ main {
 }
 
 .big-name h2 {
-  font-size: 3rem;
+  font-size: 3vw;
   font-family: "Bubble Garden Regular";
   font-weight: 300;
   /* color: #e43d12; */
@@ -121,16 +153,16 @@ main {
   justify-content: flex-end;
 }
 
-.hero-image img {
+/* .hero-image img {
   width: 100%;
   height: auto;
   display: block;
   object-fit: cover;
-}
+} */
 
 .profile-placeholder {
   width: 90%;
-  height: 0;
+  height: auto;
   padding-bottom: 100%; /* Create a square aspect ratio */
   background-color: #333;
   background-image: url("./assets/izzy.jpg");
@@ -141,22 +173,53 @@ main {
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   header {
-    flex-direction: column;
-    align-items: flex-start;
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
     gap: 1rem;
   }
 
+  /* Hamburger menu */
+  .hamburger-menu {
+    display: flex;
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+
+  /* Navigation menu for mobile */
+  .header-right {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background-color: #fffacd;
+    padding: 6rem 2rem 2rem;
+    transition: right 0.3s ease;
+    z-index: 90;
+    border-left: 1px solid #e67bb7;
+  }
+
+  .header-right.active {
+    right: 0;
+  }
+
   .header-right ul {
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding-top: 2rem;
+  }
+
+  .header-right ul li a {
+    font-size: 2rem;
   }
 
   .hero-content {
     flex-direction: column;
     align-items: center;
-    padding: 0;
+    /* padding: 0; */
   }
 
   .big-name {
@@ -164,14 +227,19 @@ main {
     margin-bottom: 2rem;
   }
 
-  .big-name h1 {
+  /* .big-name h1 {
     font-size: 12vw;
+  } */
+
+  .big-name h2 {
+    font-size: 5vw;
   }
 
   .hero-image {
     max-width: 100%;
     justify-content: center;
-    height: auto;
+    height: 80%;
+    width: 80%;
     display: block;
   }
 
