@@ -1,0 +1,222 @@
+/* Reset and Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+  font-family: "Bubble Garden Bold";
+  src: url("/assets/Bubble\ Garden\ Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Bubble Garden Regular";
+  src: url("/assets/Bubble\ Garden\ Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  /* background-color: #ebe9e1; */
+  background-color: #fffacd;
+  /* color: #e43d12; */
+  color: #e67bb7;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Header Styling */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  /* border-bottom: 1px solid #e43d12; */
+  border-bottom: 1px solid #e67bb7;
+}
+
+.header-left .name {
+  font-size: 1.7rem;
+  font-weight: 500;
+  font-family: "Bubble Garden Regular";
+}
+
+.header-right ul {
+  display: flex;
+  gap: 2rem;
+}
+
+.header-right ul li a {
+  font-size: 1.7rem;
+  font-family: "Bubble Garden Regular";
+
+  transition: opacity 0.3s ease;
+}
+
+.header-right ul li a:hover {
+  opacity: 0.7;
+}
+
+.login-btn {
+  font-weight: bold;
+}
+
+/* Main Content Styling */
+main {
+  padding: 2rem;
+}
+
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 0 3rem 0 3rem;
+}
+
+.big-name {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.big-name h1 {
+  font-size: 12vw;
+  font-family: "Bubble Garden Bold";
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  /* color: #e43d12; */
+  color: #eb389d;
+}
+
+.big-name h2 {
+  font-size: 3rem;
+  font-family: "Bubble Garden Regular";
+  font-weight: 300;
+  /* color: #e43d12; */
+  color: #e67bb7;
+}
+
+.hero-image {
+  flex: 1;
+  max-width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.profile-placeholder {
+  width: 90%;
+  height: 0;
+  padding-bottom: 100%; /* Create a square aspect ratio */
+  background-color: #333;
+  background-image: url("./assets/izzy.jpg");
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-right ul {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .hero-content {
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  .big-name {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .big-name h1 {
+    font-size: 12vw;
+  }
+
+  .hero-image {
+    max-width: 100%;
+    justify-content: center;
+    height: auto;
+    display: block;
+  }
+
+  .profile-placeholder {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+}
+
+/* Background Stars */
+.background-stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #e67bb7;
+  opacity: 0.3;
+  /* Set initial transform to match the 0% keyframe */
+  transform: scale(1) rotate(0deg);
+  animation: twinkle 3s infinite alternate;
+  animation-fill-mode: both;
+  transform-origin: center;
+  /* Updated clip-path to curve all edges inward */
+  clip-path: path(
+    "M15 0 C12 10, 10 12, 0 15 C10 18, 12 20, 15 30 C18 20, 20 18, 30 15 C20 12, 18 10, 15 0"
+  );
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1.4) rotate(15deg);
+  }
+}
