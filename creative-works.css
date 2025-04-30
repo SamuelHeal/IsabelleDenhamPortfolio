@@ -46,6 +46,7 @@
   width: 100%;
   overflow: hidden;
   aspect-ratio: 16 / 9;
+  border-radius: 10px;
 }
 
 .image {
@@ -94,8 +95,10 @@
   background-color: #d8459894;
   opacity: 0;
   transition: opacity 0.3s ease;
-  gap: 0.5rem;
+  gap: 0.25rem;
   font-family: "Bubble Garden Regular";
+  padding: 5px;
+  border-radius: 10px;
 }
 
 .overlay h3 {
@@ -122,6 +125,15 @@
   font-family: "Bubble Garden Regular";
 }
 
+.overlay p {
+  color: white;
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 200;
+  font-family: "Bubble Garden Regular";
+  font-style: italic;
+}
+
 /* Hover effects */
 .image-container:hover .placeholder-image {
   filter: blur(5px);
@@ -144,5 +156,22 @@
 
   .works-title h1 {
     font-size: 3rem;
+  }
+
+  .overlay h3 {
+    font-size: 2rem;
+  }
+
+  .overlay h4 {
+    font-size: 1rem;
+  }
+
+  .overlay h5 {
+    font-size: 1rem;
+  }
+
+  .overlay p {
+    margin-top: 5px;
+    font-size: 0.75rem;
   }
 }

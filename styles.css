@@ -151,6 +151,7 @@ main {
   max-width: 50%;
   display: flex;
   justify-content: flex-end;
+  border-radius: 10px;
 }
 
 /* .hero-image img {
@@ -161,6 +162,7 @@ main {
 } */
 
 .profile-placeholder {
+  border-radius: 10px;
   width: 90%;
   height: auto;
   padding-bottom: 100%; /* Create a square aspect ratio */
@@ -238,8 +240,8 @@ main {
   .hero-image {
     max-width: 100%;
     justify-content: center;
-    height: 80%;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     display: block;
   }
 
