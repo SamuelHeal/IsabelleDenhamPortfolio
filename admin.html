@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <title>Admin — Isabelle Denham Portfolio</title>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="admin.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+</head>
+<body>
+  <!-- Alerts Container -->
+  <div id="alerts" style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; max-width: 400px;"></div>
+
+  <!-- Login Page -->
+  <div class="login-page" id="login-page">
+    <div class="login-card">
+      <div class="login-card__logo">
+        <span class="login-card__logo-accent">◆</span>
+        Isabelle Denham
+      </div>
+      
+      <h1 class="login-card__title">Admin Login</h1>
+      <p class="login-card__subtitle">Sign in to manage your portfolio</p>
+      
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input 
+            type="email" 
+            id="login-email" 
+            class="form-input" 
+            placeholder="your@email.com"
+            required
+          >
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input 
+            type="password" 
+            id="login-password" 
+            class="form-input" 
+            placeholder="••••••••"
+            required
+          >
+        </div>
+        
+        <div class="alert alert--error hidden" id="login-error"></div>
+        
+        <button type="submit" class="btn btn--primary" style="width: 100%;">
+          Sign In
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="admin" id="admin">
+    <!-- Header -->
+    <header class="admin__header">
+      <div class="admin__logo">
+        <span class="admin__logo-icon">◆</span>
+        Portfolio Admin
+      </div>
+      
+      <div class="admin__actions">
+        <button class="btn btn--secondary" id="export-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Export Backup
+        </button>
+        <button class="btn btn--ghost" id="logout-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+          </svg>
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <div class="admin__main">
+      <!-- Sidebar -->
+      <aside class="admin__sidebar">
+        <ul class="sidebar-nav">
+          <li class="sidebar-nav__item active" data-panel="site">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            Site Settings
+          </li>
+          <li class="sidebar-nav__item" data-panel="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            </svg>
+            Home Page
+          </li>
+          <li class="sidebar-nav__item" data-panel="work">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Work Page
+          </li>
+          <li class="sidebar-nav__item" data-panel="contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <path d="M22 6l-10 7L2 6"/>
+            </svg>
+            Contact Page
+          </li>
+          <li class="sidebar-nav__item" data-panel="projects">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="23 7 16 12 23 17 23 7"/>
+              <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+            Projects
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Content -->
+      <main class="admin__content">
+        <!-- Site Settings Panel -->
+        <div class="panel active" id="panel-site">
+          <div class="panel__header">
+            <h1 class="panel__title">Site Settings</h1>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">General</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Site Name</label>
+                <input type="text" id="site-name" class="form-input" placeholder="Isabelle Denham">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tagline</label>
+                <input type="text" id="site-tagline" class="form-input" placeholder="Film Director">
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Contact Information</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Contact Email</label>
+                <input type="email" id="contact-email" class="form-input" placeholder="hello@example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Form Endpoint <small>(Formspree, etc.)</small></label>
+                <input type="url" id="form-endpoint" class="form-input" placeholder="https://formspree.io/f/...">
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Social Links</h3>
+            <div class="form-group">
+              <label class="form-label">Vimeo URL</label>
+              <input type="url" id="social-vimeo" class="form-input" placeholder="https://vimeo.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Instagram URL</label>
+              <input type="url" id="social-instagram" class="form-input" placeholder="https://instagram.com/...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">LinkedIn URL</label>
+              <input type="url" id="social-linkedin" class="form-input" placeholder="https://linkedin.com/in/...">
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Footer</h3>
+            <div class="form-group">
+              <label class="form-label">Footer Heading</label>
+              <input type="text" id="footer-heading" class="form-input" placeholder="Let's create something.">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Copyright Text</label>
+              <input type="text" id="footer-copyright" class="form-input" placeholder="© 2024 ...">
+            </div>
+          </div>
+          
+          <button class="btn btn--primary" onclick="saveSiteSettings()">Save Changes</button>
+        </div>
+
+        <!-- Home Page Panel -->
+        <div class="panel" id="panel-home">
+          <div class="panel__header">
+            <h1 class="panel__title">Home Page</h1>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Hero Section</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Video Type</label>
+                <select id="hero-video-type" class="form-select">
+                  <option value="youtube">YouTube</option>
+                  <option value="googledrive">Google Drive</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Video ID</label>
+                <input type="text" id="hero-video-id" class="form-input" placeholder="YouTube ID or Drive File ID">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Poster Image URL <small>(Google Drive)</small></label>
+              <input type="url" id="hero-poster-url" class="form-input" placeholder="https://drive.google.com/uc?export=view&id=...">
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">About Section</h3>
+            <div class="form-group">
+              <label class="form-label">Heading</label>
+              <input type="text" id="about-heading" class="form-input" placeholder="About Me">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Bio Text</label>
+              <textarea id="about-bio" class="form-textarea" placeholder="Your bio..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Portrait Image URL <small>(Google Drive)</small></label>
+              <input type="url" id="about-portrait-url" class="form-input" placeholder="https://drive.google.com/uc?export=view&id=...">
+              <div class="preview-wrapper" id="portrait-preview"></div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Featured Projects</h3>
+            <p class="text-muted mb-2">Select which projects appear in the featured section on the home page.</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Featured #1</label>
+                <input type="text" id="featured-project-1" class="form-input" placeholder="Project ID (e.g., fringe)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Featured #2</label>
+                <input type="text" id="featured-project-2" class="form-input" placeholder="Project ID">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Featured #3</label>
+              <input type="text" id="featured-project-3" class="form-input" placeholder="Project ID">
+            </div>
+          </div>
+          
+          <button class="btn btn--primary" onclick="saveHomeSettings()">Save Changes</button>
+        </div>
+
+        <!-- Work Page Panel -->
+        <div class="panel" id="panel-work">
+          <div class="panel__header">
+            <h1 class="panel__title">Work Page</h1>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Page Header</h3>
+            <div class="form-group">
+              <label class="form-label">Page Heading</label>
+              <input type="text" id="work-heading" class="form-input" placeholder="Selected Work">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subheading</label>
+              <input type="text" id="work-subheading" class="form-input" placeholder="A collection of...">
+            </div>
+          </div>
+          
+          <button class="btn btn--primary" onclick="saveWorkSettings()">Save Changes</button>
+        </div>
+
+        <!-- Contact Page Panel -->
+        <div class="panel" id="panel-contact">
+          <div class="panel__header">
+            <h1 class="panel__title">Contact Page</h1>
+          </div>
+          
+          <div class="card">
+            <h3 class="card__title">Page Header</h3>
+            <div class="form-group">
+              <label class="form-label">Page Heading</label>
+              <input type="text" id="contact-heading" class="form-input" placeholder="LET'S CREATE">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subheading</label>
+              <input type="text" id="contact-subheading" class="form-input" placeholder="For inquiries...">
+            </div>
+          </div>
+          
+          <button class="btn btn--primary" onclick="saveContactSettings()">Save Changes</button>
+        </div>
+
+        <!-- Projects Panel -->
+        <div class="panel" id="panel-projects">
+          <div class="panel__header">
+            <h1 class="panel__title">Projects</h1>
+            <button class="btn btn--primary" id="add-project-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Add Project
+            </button>
+          </div>
+          
+          <div class="projects-list" id="projects-list">
+            <!-- Projects loaded dynamically -->
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Project Modal -->
+  <div class="modal" id="project-modal">
+    <div class="modal__content">
+      <div class="modal__header">
+        <h2 class="modal__title" id="modal-title">Add Project</h2>
+        <button class="modal__close" id="close-modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="modal__body">
+        <input type="hidden" id="project-id">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input type="text" id="project-title" class="form-input" placeholder="Project title" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Subtitle</label>
+            <input type="text" id="project-subtitle" class="form-input" placeholder="Optional subtitle">
+          </div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Type *</label>
+            <select id="project-type" class="form-select">
+              <option value="Documentary">Documentary</option>
+              <option value="Short Film">Short Film</option>
+              <option value="Music Video">Music Video</option>
+              <option value="TV Series">TV Series</option>
+              <option value="Commercial">Commercial</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Year</label>
+            <input type="text" id="project-year" class="form-input" placeholder="2024">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <input type="text" id="project-role" class="form-input" placeholder="Director / Editor">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Thumbnail URL <small>(Google Drive)</small></label>
+          <input type="url" id="project-thumbnail" class="form-input" placeholder="https://drive.google.com/uc?export=view&id=...">
+          <div class="preview-wrapper" id="thumbnail-preview"></div>
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Video Type</label>
+            <select id="project-video-type" class="form-select">
+              <option value="youtube">YouTube</option>
+              <option value="googledrive">Google Drive</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Video ID</label>
+            <input type="text" id="project-video-id" class="form-input" placeholder="Video ID">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea id="project-description" class="form-textarea" placeholder="Project description..."></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" id="project-featured">
+            Feature on home page
+          </label>
+        </div>
+      </div>
+      
+      <div class="modal__footer">
+        <button class="btn btn--danger hidden" id="delete-project">Delete</button>
+        <button class="btn btn--secondary" id="cancel-project">Cancel</button>
+        <button class="btn btn--primary" id="save-project">Save Project</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
+
+
