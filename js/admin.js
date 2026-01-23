@@ -51,6 +51,25 @@ function showAdmin() {
 function setupAuthListeners() {
   const loginForm = document.getElementById('login-form');
   const logoutBtn = document.getElementById('logout-btn');
+  const passwordToggle = document.getElementById('password-toggle');
+  const passwordInput = document.getElementById('login-password');
+  
+  // Password visibility toggle
+  passwordToggle?.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    
+    const eyeIcon = document.getElementById('password-eye-icon');
+    const eyeOffIcon = document.getElementById('password-eye-off-icon');
+    
+    if (isPassword) {
+      eyeIcon.style.display = 'none';
+      eyeOffIcon.style.display = 'block';
+    } else {
+      eyeIcon.style.display = 'block';
+      eyeOffIcon.style.display = 'none';
+    }
+  });
   
   loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();

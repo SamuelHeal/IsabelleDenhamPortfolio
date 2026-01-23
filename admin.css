@@ -253,6 +253,39 @@ body {
   color: var(--admin-text-muted);
 }
 
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper .form-input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--admin-text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.password-toggle:hover {
+  color: var(--admin-text);
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: var(--admin-accent);
+}
+
 .form-textarea {
   min-height: 120px;
   resize: vertical;
