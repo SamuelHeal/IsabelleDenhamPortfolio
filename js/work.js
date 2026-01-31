@@ -2,7 +2,7 @@
 // WORK.JS — Work page functionality
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { contentManager } from './main.js';
+import { contentManager, convertGoogleDriveUrl } from './main.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INITIALIZE WORK PAGE
@@ -42,21 +42,27 @@ function renderWorkGrid() {
   
   if (!grid || !projects.length) return;
   
-  grid.innerHTML = projects.map(project => `
-    <a href="project.html?id=${project.id}" class="work-card">
-      <div class="work-card__media">
-        <img 
-          src="${project.thumbnail_url || 'https://placehold.co/800x450/1a1a1a/ff1b6b?text=' + encodeURIComponent(project.title)}" 
-          alt="${project.title}"
-          loading="lazy"
-        />
-      </div>
-      <div class="work-card__overlay">
-        <span class="work-card__type">${project.type}</span>
-        <h3 class="work-card__title">${project.title}</h3>
-      </div>
-    </a>
-  `).join('');
+  grid.innerHTML = projects.map(project => {
+    const thumbnailUrl = project.thumbnail_url 
+      ? convertGoogleDriveUrl(project.thumbnail_url)
+      : 'https://placehold.co/800x450/1a1a1a/ff1b6b?text=' + encodeURIComponent(project.title);
+    
+    return `
+      <a href="project.html?id=${project.id}" class="work-card">
+        <div class="work-card__media">
+          <img 
+            src="${thumbnailUrl}" 
+            alt="${project.title}"
+            loading="lazy"
+          />
+        </div>
+        <div class="work-card__overlay">
+          <span class="work-card__type">${project.type}</span>
+          <h3 class="work-card__title">${project.title}</h3>
+        </div>
+      </a>
+    `;
+  }).join('');
 }
 
 

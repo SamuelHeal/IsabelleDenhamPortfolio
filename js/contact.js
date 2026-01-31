@@ -50,7 +50,6 @@ function renderContactPage() {
   const socialsContainer = document.querySelector('.contact-page__socials');
   if (socialsContainer) {
     const socials = [
-      { id: 'vimeo', url: settings.social_vimeo, icon: socialIcons.vimeo },
       { id: 'instagram', url: settings.social_instagram, icon: socialIcons.instagram },
       { id: 'linkedin', url: settings.social_linkedin, icon: socialIcons.linkedin }
     ].filter(s => s.url);

@@ -2,7 +2,7 @@
 // PROJECT.JS — Project detail page functionality
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { contentManager, createVideoEmbed } from './main.js';
+import { contentManager, createVideoEmbed, formatTextWithLineBreaks } from './main.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INITIALIZE PROJECT PAGE
@@ -69,10 +69,10 @@ function renderProjectPage() {
     `;
   }
   
-  // Update description
+  // Update description (with line break support)
   const description = document.getElementById('project-description');
   if (description) {
-    description.textContent = project.description || '';
+    description.innerHTML = formatTextWithLineBreaks(project.description || '');
   }
   
   // Update credits
