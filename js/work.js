@@ -45,7 +45,7 @@ function renderWorkGrid() {
   grid.innerHTML = projects.map(project => {
     const thumbnailUrl = project.thumbnail_url 
       ? convertGoogleDriveUrl(project.thumbnail_url)
-      : 'https://placehold.co/800x450/1a1a1a/ff1b6b?text=' + encodeURIComponent(project.title);
+      : `https://placehold.co/400x600/0a0a0a/d4a574?text=${encodeURIComponent(project.title)}`;
     
     return `
       <a href="project.html?id=${project.id}" class="work-card">
@@ -59,6 +59,12 @@ function renderWorkGrid() {
         <div class="work-card__overlay">
           <span class="work-card__type">${project.type}</span>
           <h3 class="work-card__title">${project.title}</h3>
+          <span class="work-card__view">
+            View Project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
         </div>
       </a>
     `;

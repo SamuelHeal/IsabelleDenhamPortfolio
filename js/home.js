@@ -82,25 +82,30 @@ function renderFeaturedWork() {
   if (!carousel || !featured.length) return;
   
   carousel.innerHTML = featured.map((project, index) => {
-    const embedUrl = createVideoEmbed(project.video_type, project.video_id);
+    const thumbnailUrl = project.thumbnail_url 
+      ? convertGoogleDriveUrl(project.thumbnail_url)
+      : `https://placehold.co/400x600/0a0a0a/d4a574?text=${encodeURIComponent(project.title)}`;
     
     return `
-      <div class="featured-slide" data-index="${index}">
-        <div class="featured-slide__video">
-          <iframe 
-            src="${embedUrl}" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
+      <a href="project.html?id=${project.id}" class="featured-poster" data-index="${index}">
+        <div class="featured-poster__media">
+          <img 
+            src="${thumbnailUrl}" 
+            alt="${project.title}"
+            loading="lazy"
+          />
         </div>
-        <div class="featured-slide__info">
-          <h3 class="featured-slide__title">${project.title}</h3>
-          <a href="project.html?id=${project.id}" class="featured-slide__link">
-            More Info →
-          </a>
+        <div class="featured-poster__overlay">
+          <span class="featured-poster__type">${project.type}</span>
+          <h3 class="featured-poster__title">${project.title}</h3>
+          <span class="featured-poster__cta">
+            View Project
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </span>
         </div>
-      </div>
+      </a>
     `;
   }).join('');
 }

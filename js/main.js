@@ -50,6 +50,8 @@ function initNavigation() {
   const nav = document.querySelector('.nav');
   const toggle = document.querySelector('.nav__toggle');
   const links = document.querySelector('.nav__links');
+  const overlay = document.querySelector('.nav__overlay');
+  const closeBtn = document.querySelector('.nav__close');
   
   // Scroll effect
   let lastScroll = 0;
@@ -65,22 +67,43 @@ function initNavigation() {
     lastScroll = currentScroll;
   });
   
+  // Helper to close mobile menu
+  function closeMobileMenu() {
+    toggle.classList.remove('active');
+    links.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  
   // Mobile toggle
   if (toggle && links) {
     toggle.addEventListener('click', () => {
-      toggle.classList.toggle('active');
-      links.classList.toggle('open');
-      document.body.style.overflow = links.classList.contains('open') ? 'hidden' : '';
+      const isOpen = links.classList.contains('open');
+      
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        toggle.classList.add('active');
+        links.classList.add('open');
+        if (overlay) overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     });
     
     // Close on link click
     links.querySelectorAll('.nav__link').forEach(link => {
-      link.addEventListener('click', () => {
-        toggle.classList.remove('active');
-        links.classList.remove('open');
-        document.body.style.overflow = '';
-      });
+      link.addEventListener('click', closeMobileMenu);
     });
+    
+    // Close on overlay click
+    if (overlay) {
+      overlay.addEventListener('click', closeMobileMenu);
+    }
+    
+    // Close on close button click
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeMobileMenu);
+    }
   }
   
   // Set active link
@@ -113,6 +136,13 @@ function initScrollEffects() {
   // Observe elements with animation classes
   document.querySelectorAll('.about__content, .about__image-wrapper, [data-animate]').forEach(el => {
     observer.observe(el);
+  });
+  
+  // Re-observe dynamically loaded elements after content-ready
+  document.addEventListener('content-ready', () => {
+    document.querySelectorAll('.featured-poster, .work-card').forEach(el => {
+      observer.observe(el);
+    });
   });
 }
 
