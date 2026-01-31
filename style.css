@@ -364,14 +364,13 @@ p {
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 3rem 0;
+  padding: 1.75rem 0;
   transition: all var(--transition-cinematic);
 }
 
 .nav.scrolled {
   background: rgba(3, 3, 3, 0.9);
   backdrop-filter: blur(20px);
-  padding: 1.75rem 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -526,7 +525,7 @@ p {
 
 .hero::before {
   top: 0;
-  height: 12vh; /* Taller top bar for nav clearance */
+  height: 9vh; /* Top bar for nav clearance */
 }
 
 .hero::after {
@@ -536,7 +535,7 @@ p {
 
 .hero__video-wrapper {
   position: absolute;
-  top: 10vh;
+  top: 7vh;
   left: 0;
   right: 0;
   bottom: 0;
