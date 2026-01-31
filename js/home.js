@@ -2,7 +2,7 @@
 // HOME.JS — Home page specific functionality
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { contentManager, createVideoEmbed } from './main.js';
+import { contentManager, createVideoEmbed, formatTextWithLineBreaks, convertGoogleDriveUrl } from './main.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INITIALIZE HOME PAGE
@@ -57,16 +57,16 @@ function renderAbout() {
     heading.textContent = settings.about_heading;
   }
   
-  // Update bio
+  // Update bio (with line break support)
   const bio = document.getElementById('about-bio');
   if (bio && settings.about_bio) {
-    bio.textContent = settings.about_bio;
+    bio.innerHTML = formatTextWithLineBreaks(settings.about_bio);
   }
   
-  // Update portrait
+  // Update portrait (with Google Drive URL conversion)
   const portrait = document.getElementById('about-portrait');
   if (portrait && settings.about_portrait_url) {
-    portrait.src = settings.about_portrait_url;
+    portrait.src = convertGoogleDriveUrl(settings.about_portrait_url);
     portrait.alt = `${settings.site_name} - Portrait`;
   }
 }

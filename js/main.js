@@ -142,7 +142,6 @@ function populateFooter() {
   
   // Update social links
   const socialLinks = {
-    'social-vimeo': settings.social_vimeo,
     'social-instagram': settings.social_instagram,
     'social-linkedin': settings.social_linkedin
   };
@@ -173,6 +172,68 @@ export function createVideoEmbed(videoType, videoId, autoplay = false) {
     return `https://drive.google.com/file/d/${videoId}/preview`;
   }
   return '';
+}
+
+// Convert newlines to <br> for HTML display (preserves line breaks in text)
+export function formatTextWithLineBreaks(text) {
+  if (!text) return '';
+  // Escape HTML to prevent XSS, then convert newlines to <br>
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+    .replace(/\n/g, '<br>');
+}
+
+// Convert Google Drive share links to direct image URLs
+export function convertGoogleDriveUrl(url) {
+  if (!url) return url;
+  
+  // Already using lh3.googleusercontent.com (direct image URL)
+  if (url.includes('lh3.googleusercontent.com')) {
+    return url;
+  }
+  
+  // Not a Google Drive URL
+  if (!url.includes('drive.google.com')) {
+    return url;
+  }
+  
+  // Extract file ID from various Google Drive URL formats
+  let fileId = null;
+  
+  // Format: https://drive.google.com/file/d/FILE_ID/view
+  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileIdMatch) {
+    fileId = fileIdMatch[1];
+  }
+  
+  // Format: https://drive.google.com/open?id=FILE_ID
+  if (!fileId) {
+    const openIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (openIdMatch) {
+      fileId = openIdMatch[1];
+    }
+  }
+  
+  // Format: https://drive.google.com/uc?id=FILE_ID
+  if (!fileId) {
+    const ucMatch = url.match(/\/uc\?.*id=([a-zA-Z0-9_-]+)/);
+    if (ucMatch) {
+      fileId = ucMatch[1];
+    }
+  }
+  
+  // If we found a file ID, return the direct image URL via lh3.googleusercontent.com
+  // This is more reliable than the uc?export=view method which Google has restricted
+  if (fileId) {
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  }
+  
+  // Return original URL if we couldn't parse it
+  return url;
 }
 
 // Social icons SVG

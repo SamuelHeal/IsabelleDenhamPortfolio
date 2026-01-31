@@ -5,6 +5,55 @@
 import { supabase } from './supabase-client.js';
 import { contentManager } from './content-manager.js';
 
+// Convert Google Drive share links to direct image URLs
+function convertGoogleDriveUrl(url) {
+  if (!url) return url;
+  
+  // Already using lh3.googleusercontent.com (direct image URL)
+  if (url.includes('lh3.googleusercontent.com')) {
+    return url;
+  }
+  
+  // Not a Google Drive URL
+  if (!url.includes('drive.google.com')) {
+    return url;
+  }
+  
+  // Extract file ID from various Google Drive URL formats
+  let fileId = null;
+  
+  // Format: https://drive.google.com/file/d/FILE_ID/view
+  const fileIdMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (fileIdMatch) {
+    fileId = fileIdMatch[1];
+  }
+  
+  // Format: https://drive.google.com/open?id=FILE_ID
+  if (!fileId) {
+    const openIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (openIdMatch) {
+      fileId = openIdMatch[1];
+    }
+  }
+  
+  // Format: https://drive.google.com/uc?id=FILE_ID
+  if (!fileId) {
+    const ucMatch = url.match(/\/uc\?.*id=([a-zA-Z0-9_-]+)/);
+    if (ucMatch) {
+      fileId = ucMatch[1];
+    }
+  }
+  
+  // If we found a file ID, return the direct image URL via lh3.googleusercontent.com
+  // This is more reliable than the uc?export=view method which Google has restricted
+  if (fileId) {
+    return `https://lh3.googleusercontent.com/d/${fileId}`;
+  }
+  
+  // Return original URL if we couldn't parse it
+  return url;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -163,7 +212,6 @@ function populateSiteSettings() {
   document.getElementById('site-tagline').value = settings.tagline || '';
   document.getElementById('contact-email').value = settings.contact_email || '';
   document.getElementById('form-endpoint').value = settings.form_endpoint || '';
-  document.getElementById('social-vimeo').value = settings.social_vimeo || '';
   document.getElementById('social-instagram').value = settings.social_instagram || '';
   document.getElementById('social-linkedin').value = settings.social_linkedin || '';
   document.getElementById('footer-heading').value = settings.footer_heading || '';
@@ -222,7 +270,6 @@ window.saveSiteSettings = async function() {
       tagline: document.getElementById('site-tagline').value,
       contact_email: document.getElementById('contact-email').value,
       form_endpoint: document.getElementById('form-endpoint').value,
-      social_vimeo: document.getElementById('social-vimeo').value,
       social_instagram: document.getElementById('social-instagram').value,
       social_linkedin: document.getElementById('social-linkedin').value,
       footer_heading: document.getElementById('footer-heading').value,
@@ -353,32 +400,38 @@ function renderProjectsList() {
     return;
   }
   
-  container.innerHTML = projects.map(project => `
-    <div class="project-item" data-id="${project.id}">
-      <div class="project-item__drag">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M8 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm8-12a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0z"/>
-        </svg>
-      </div>
-      <img 
-        class="project-item__thumb" 
-        src="${project.thumbnail_url || 'https://placehold.co/80x45/161b22/8b949e?text=No+Image'}" 
-        alt="${project.title}"
-        onerror="this.src='https://placehold.co/80x45/161b22/8b949e?text=No+Image'"
-      >
-      <div class="project-item__info">
-        <div class="project-item__title">${project.title}</div>
-        <div class="project-item__meta">
-          <span>${project.type}</span>
-          <span>${project.year}</span>
-          ${project.featured ? '<span class="project-item__featured">★ Featured</span>' : ''}
+  container.innerHTML = projects.map(project => {
+    const thumbnailUrl = project.thumbnail_url 
+      ? convertGoogleDriveUrl(project.thumbnail_url)
+      : 'https://placehold.co/80x45/161b22/8b949e?text=No+Image';
+    
+    return `
+      <div class="project-item" data-id="${project.id}">
+        <div class="project-item__drag">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm8-12a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0zm0 6a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+        </div>
+        <img 
+          class="project-item__thumb" 
+          src="${thumbnailUrl}" 
+          alt="${project.title}"
+          onerror="this.src='https://placehold.co/80x45/161b22/8b949e?text=No+Image'"
+        >
+        <div class="project-item__info">
+          <div class="project-item__title">${project.title}</div>
+          <div class="project-item__meta">
+            <span>${project.type}</span>
+            <span>${project.year}</span>
+            ${project.featured ? '<span class="project-item__featured">★ Featured</span>' : ''}
+          </div>
+        </div>
+        <div class="project-item__actions">
+          <button class="btn btn--secondary btn--sm" onclick="editProject('${project.id}')">Edit</button>
         </div>
       </div>
-      <div class="project-item__actions">
-        <button class="btn btn--secondary btn--sm" onclick="editProject('${project.id}')">Edit</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 window.editProject = function(projectId) {
@@ -505,10 +558,13 @@ function updatePreview(inputId, previewId) {
     return;
   }
   
+  // Convert Google Drive URLs to direct links for preview
+  const previewUrl = convertGoogleDriveUrl(url);
+  
   preview.innerHTML = `
     <img 
       class="preview-image" 
-      src="${url}" 
+      src="${previewUrl}" 
       alt="Preview"
       onerror="this.parentNode.innerHTML = '<div class=\\'preview-error\\'>Failed to load image</div>'"
     >
