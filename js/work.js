@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// WORK.JS — Work page functionality
+// WORK.JS — Work page functionality with CSS columns masonry
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { contentManager, convertGoogleDriveUrl } from './main.js';
@@ -33,7 +33,7 @@ function renderPageHeader() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// WORK GRID
+// WORK GRID — Cards sized to fit their images naturally
 // ─────────────────────────────────────────────────────────────────────────────
 
 function renderWorkGrid() {
@@ -48,7 +48,7 @@ function renderWorkGrid() {
       : `https://placehold.co/400x600/0a0a0a/d4a574?text=${encodeURIComponent(project.title)}`;
     
     return `
-      <a href="project.html?id=${project.id}" class="work-card">
+      <a href="project.html?id=${project.id}" class="work-card" data-project-id="${project.id}">
         <div class="work-card__media">
           <img 
             src="${thumbnailUrl}" 
