@@ -69,20 +69,45 @@
       <div class="container hero__content">
         <div class="hero__bottom">
           <a href="#about" class="hero__scroll-hint">
-            <span>Scroll</span>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
+            <span>About Me</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M12 5v14M5 12l7 7 7-7" />
             </svg>
           </a>
 
-          <div class="hero__ctas">
-            <a href="work.html" class="btn btn--primary">View Work</a>
-            <a href="contact.html" class="btn btn--secondary">Contact</a>
+          <div class="hero__actions">
+            <div class="hero__ctas">
+              <a href="work.html" class="btn btn--primary">View Work</a>
+              <a href="contact.html" class="btn btn--secondary">Contact</a>
+            </div>
+
+            <div class="hero__controls-divider"></div>
+
+            <div class="hero__video-controls" id="video-controls-inline">
+              <button class="hero__control-btn hero__control-btn--play" id="video-play-btn" aria-label="Play/Pause video">
+                <svg class="icon-play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>
+                </svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+                  <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+                </svg>
+              </button>
+              <button class="hero__control-btn hero__control-btn--sound" id="video-mute-btn" aria-label="Turn on sound">
+                <span class="hero__sound-indicator"></span>
+                <span class="hero__sound-badge">♪</span>
+                <svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                </svg>
+                <svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+                  <line x1="23" y1="9" x2="17" y2="15"/>
+                  <line x1="17" y1="9" x2="23" y2="15"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -93,8 +118,7 @@
       <div class="container">
         <div class="about__grid">
           <div class="about__content">
-            <span class="about__label">About</span>
-            <h2 class="about__heading" id="about-heading">The Director</h2>
+            <h2 class="about__heading" id="about-heading">About Me</h2>
             <p class="about__text" id="about-bio">
               I craft compelling narratives that resonate with audiences. With a
               passion for visual storytelling, my work explores the human
@@ -115,15 +139,18 @@
       </div>
     </section>
 
-    <!-- Featured Work Section -->
+    <!-- Featured Work Section — Cinema Spotlight -->
     <section class="featured-work section section--lg">
       <div class="container">
         <div class="featured-work__inner">
-          <div class="featured-work__label">Selected Works</div>
+          <header class="featured-work__header">
+            <div class="featured-work__label">Selected Works</div>
+            <div class="featured-work__label-line"></div>
+          </header>
 
           <div class="featured-work__main">
             <div class="featured-work__carousel" id="featured-carousel">
-              <!-- Featured projects loaded dynamically -->
+              <!-- Featured projects loaded dynamically as spotlight cards -->
             </div>
 
             <div class="featured-work__cta">
@@ -182,6 +209,6 @@
     </footer>
 
     <!-- Scripts -->
-    <script type="module" src="js/home.js"></script>
+    <script type="module" src="js/home.js?v=3"></script>
   </body>
 </html>

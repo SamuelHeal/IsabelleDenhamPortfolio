@@ -62,6 +62,10 @@ let currentUser = null;
 let activePanel = 'site';
 let editingProject = null;
 
+// Supabase Edge Function URL
+const SUPABASE_URL = "https://pandxectpkqgzwdordmp.supabase.co";
+const EDGE_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/download-video`;
+
 // ─────────────────────────────────────────────────────────────────────────────
 // INITIALIZATION
 // ─────────────────────────────────────────────────────────────────────────────
@@ -81,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupAuthListeners();
   setupNavigation();
   setupProjectListeners();
+  setupVideoImport();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -224,16 +229,11 @@ function populateHomeSettings() {
   
   document.getElementById('hero-video-type').value = settings.hero_video_type || 'youtube';
   document.getElementById('hero-video-id').value = settings.hero_video_id || '';
+  document.getElementById('hero-video-mobile').value = settings.hero_video_mobile || '';
   document.getElementById('hero-poster-url').value = settings.hero_poster_url || '';
   document.getElementById('about-heading').value = settings.about_heading || '';
   document.getElementById('about-bio').value = settings.about_bio || '';
   document.getElementById('about-portrait-url').value = settings.about_portrait_url || '';
-  
-  // Featured projects
-  const featuredIds = settings.featured_project_ids || [];
-  document.getElementById('featured-project-1').value = featuredIds[0] || '';
-  document.getElementById('featured-project-2').value = featuredIds[1] || '';
-  document.getElementById('featured-project-3').value = featuredIds[2] || '';
   
   // Preview portrait
   updatePreview('about-portrait-url', 'portrait-preview');
@@ -293,15 +293,11 @@ window.saveHomeSettings = async function() {
     await contentManager.updateSettings({
       hero_video_type: document.getElementById('hero-video-type').value,
       hero_video_id: document.getElementById('hero-video-id').value,
+      hero_video_mobile: document.getElementById('hero-video-mobile').value,
       hero_poster_url: document.getElementById('hero-poster-url').value,
       about_heading: document.getElementById('about-heading').value,
       about_bio: document.getElementById('about-bio').value,
-      about_portrait_url: document.getElementById('about-portrait-url').value,
-      featured_project_ids: [
-        document.getElementById('featured-project-1').value,
-        document.getElementById('featured-project-2').value,
-        document.getElementById('featured-project-3').value
-      ].filter(Boolean)
+      about_portrait_url: document.getElementById('about-portrait-url').value
     });
     showAlert('success', 'Home settings saved!');
   } catch (error) {
@@ -533,6 +529,173 @@ async function deleteProject() {
 function closeModal() {
   document.getElementById('project-modal').classList.remove('active');
   editingProject = null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VIDEO UPLOAD
+// ─────────────────────────────────────────────────────────────────────────────
+
+function setupVideoImport() {
+  const uploadBtn = document.getElementById('upload-video-btn');
+  const mobileUploadBtn = document.getElementById('upload-mobile-video-btn');
+  const videoTypeSelect = document.getElementById('hero-video-type');
+  
+  // Upload button click handlers
+  uploadBtn?.addEventListener('click', () => uploadVideoFile('desktop'));
+  mobileUploadBtn?.addEventListener('click', () => uploadVideoFile('mobile'));
+  
+  // Update hint text based on video type
+  videoTypeSelect?.addEventListener('change', updateVideoHint);
+  
+  // Initial hint update
+  updateVideoHint();
+}
+
+function updateVideoHint() {
+  const videoType = document.getElementById('hero-video-type')?.value;
+  const hintEl = document.getElementById('video-id-hint');
+  
+  if (!hintEl) return;
+  
+  const hints = {
+    'supabase': 'For Supabase: just the filename (e.g., hero-video.mp4)',
+    'youtube': 'For YouTube: the video ID from the URL (e.g., dQw4w9WgXcQ)',
+    'googledrive': 'For Google Drive: the file ID from the share URL'
+  };
+  
+  hintEl.textContent = hints[videoType] || hints['supabase'];
+}
+
+async function uploadVideoFile(type = 'desktop') {
+  const isMobile = type === 'mobile';
+  const fileInput = document.getElementById(isMobile ? 'mobile-video-file-input' : 'video-file-input');
+  const progressEl = document.getElementById(isMobile ? 'mobile-upload-progress' : 'upload-progress');
+  const progressFill = document.getElementById(isMobile ? 'mobile-upload-progress-fill' : 'upload-progress-fill');
+  const progressText = document.getElementById(isMobile ? 'mobile-upload-progress-text' : 'upload-progress-text');
+  const uploadBtn = document.getElementById(isMobile ? 'upload-mobile-video-btn' : 'upload-video-btn');
+  
+  const file = fileInput?.files?.[0];
+  
+  if (!file) {
+    showAlert('error', `Please select a ${isMobile ? 'mobile ' : ''}video file`);
+    return;
+  }
+  
+  // Validate file type
+  const allowedTypes = ['video/mp4', 'video/webm', 'video/quicktime'];
+  if (!allowedTypes.includes(file.type)) {
+    showAlert('error', 'Please select an MP4, WebM, or MOV file');
+    return;
+  }
+  
+  // Generate filename with timestamp to avoid conflicts
+  const extension = file.name.split('.').pop();
+  const prefix = isMobile ? 'hero-mobile' : 'hero-video';
+  const filename = `${prefix}-${Date.now()}.${extension}`;
+  
+  // Show progress
+  progressEl?.classList.remove('hidden', 'complete', 'error');
+  if (progressFill) progressFill.style.width = '0%';
+  if (progressText) progressText.textContent = 'Preparing upload...';
+  if (uploadBtn) uploadBtn.disabled = true;
+  
+  try {
+    // Show initial progress
+    if (progressFill) progressFill.style.width = '10%';
+    if (progressText) progressText.textContent = `Uploading ${formatFileSize(file.size)}...`;
+    
+    // Upload using XMLHttpRequest for progress tracking
+    await uploadWithProgress(file, filename, (progress) => {
+      if (progressFill) progressFill.style.width = `${Math.min(progress, 95)}%`;
+      if (progressText) progressText.textContent = `Uploading... ${Math.round(progress)}%`;
+    });
+    
+    // Complete!
+    if (progressFill) progressFill.style.width = '100%';
+    progressEl?.classList.add('complete');
+    if (progressText) progressText.textContent = `Success! File: ${filename}`;
+    
+    // Update the form fields
+    if (isMobile) {
+      document.getElementById('hero-video-mobile').value = filename;
+    } else {
+      document.getElementById('hero-video-type').value = 'supabase';
+      document.getElementById('hero-video-id').value = filename;
+    }
+    
+    // Clear the file input
+    fileInput.value = '';
+    
+    // Update the hint text
+    updateVideoHint();
+    
+    showAlert('success', `${isMobile ? 'Mobile video' : 'Video'} uploaded! Filename: ${filename}`);
+    
+    // Hide progress after a few seconds
+    setTimeout(() => {
+      progressEl?.classList.add('hidden');
+      progressEl?.classList.remove('complete');
+    }, 5000);
+    
+  } catch (error) {
+    console.error('Upload error:', error);
+    progressEl?.classList.add('error');
+    if (progressFill) progressFill.style.width = '100%';
+    if (progressText) progressText.textContent = `Error: ${error.message}`;
+    showAlert('error', error.message);
+  } finally {
+    if (uploadBtn) uploadBtn.disabled = false;
+  }
+}
+
+function uploadWithProgress(file, filename, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const url = `${SUPABASE_URL}/storage/v1/object/videos/${filename}`;
+    const authToken = localStorage.getItem('supabase_auth_token');
+    
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('apikey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhbmR4ZWN0cGtxZ3p3ZG9yZG1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzEyNTIsImV4cCI6MjA4NTUwNzI1Mn0.-wxqrfuWl9vcwlsaOx0-lNdZaj5_G8fX58Opgzoy0gI');
+    xhr.setRequestHeader('Authorization', `Bearer ${authToken}`);
+    xhr.setRequestHeader('x-upsert', 'true');
+    
+    xhr.upload.addEventListener('progress', (e) => {
+      if (e.lengthComputable) {
+        const progress = (e.loaded / e.total) * 100;
+        onProgress(progress);
+      }
+    });
+    
+    xhr.addEventListener('load', () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(JSON.parse(xhr.responseText));
+      } else {
+        try {
+          const error = JSON.parse(xhr.responseText);
+          reject(new Error(error.message || error.error || 'Upload failed'));
+        } catch {
+          reject(new Error(`Upload failed: ${xhr.statusText}`));
+        }
+      }
+    });
+    
+    xhr.addEventListener('error', () => {
+      reject(new Error('Network error during upload'));
+    });
+    
+    xhr.addEventListener('abort', () => {
+      reject(new Error('Upload cancelled'));
+    });
+    
+    xhr.send(file);
+  });
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  if (bytes < 1024 * 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+  return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

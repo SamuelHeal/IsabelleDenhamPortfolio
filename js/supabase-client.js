@@ -2,9 +2,9 @@
 // SUPABASE CLIENT — Isabelle Denham Portfolio
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SUPABASE_URL = "https://yjhfkyrvirlxmogpbfpy.supabase.co";
+const SUPABASE_URL = "https://pandxectpkqgzwdordmp.supabase.co";
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlqaGZreXJ2aXJseG1vZ3BiZnB5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMzkzMzYsImV4cCI6MjA4MDkxNTMzNn0.T2u3VWxJoVGixZEZYYsiVNYDHF5_b_5ujGSJAVIed24";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBhbmR4ZWN0cGtxZ3p3ZG9yZG1wIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk5MzEyNTIsImV4cCI6MjA4NTUwNzI1Mn0.-wxqrfuWl9vcwlsaOx0-lNdZaj5_G8fX58Opgzoy0gI";
 
 // Simple Supabase client for browser use (no npm required)
 class SupabaseClient {
@@ -190,6 +190,43 @@ class SupabaseClient {
     }
 
     return true;
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // STORAGE METHODS
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // Upload file to storage bucket
+  async uploadFile(bucket, filename, file, options = {}) {
+    const url = `${this.url}/storage/v1/object/${bucket}/${filename}`;
+    
+    const headers = {
+      apikey: this.key,
+      Authorization: `Bearer ${this.authToken || localStorage.getItem("supabase_auth_token")}`,
+    };
+    
+    // Add upsert header if specified
+    if (options.upsert) {
+      headers['x-upsert'] = 'true';
+    }
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: file,
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || error.error || "Failed to upload file");
+    }
+
+    return response.json();
+  }
+
+
+  getPublicUrl(bucket, filename) {
+    return `${this.url}/storage/v1/object/public/${bucket}/${filename}`;
   }
 }
 

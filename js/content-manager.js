@@ -50,10 +50,7 @@ class ContentManager {
   }
 
   getFeaturedProjects() {
-    const ids = this.settings?.featured_project_ids || [];
-    return ids
-      .map(id => this.projects.find(p => p.id === id))
-      .filter(Boolean);
+    return this.projects.filter(p => p.featured === true);
   }
 
   getProjectById(id) {

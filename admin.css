@@ -318,6 +318,14 @@ body {
   color: var(--admin-text-muted);
 }
 
+.form-hint {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  font-style: italic;
+}
+
 .form-input,
 .form-textarea,
 .form-select {
@@ -834,6 +842,147 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--admin-text-muted);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   IMPORT SECTION
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.import-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(212, 165, 116, 0.05);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 4px;
+}
+
+.import-section__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.import-section__title {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--admin-accent);
+  margin: 0;
+}
+
+.import-section__badge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.5rem;
+  background: var(--admin-accent);
+  color: var(--admin-bg);
+  border-radius: 2px;
+}
+
+.import-section__badge--secondary {
+  background: var(--admin-text-muted);
+  color: var(--admin-bg);
+}
+
+.import-section--secondary {
+  margin-top: 1rem;
+  background: rgba(138, 133, 125, 0.05);
+  border-color: rgba(138, 133, 125, 0.2);
+}
+
+.import-section__desc {
+  font-size: 0.8125rem;
+  color: var(--admin-text-muted);
+  margin-bottom: 1rem;
+}
+
+.import-progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--admin-surface);
+  border-radius: 4px;
+}
+
+.import-progress.hidden {
+  display: none;
+}
+
+.import-progress__bar {
+  flex: 1;
+  height: 4px;
+  background: var(--admin-border-visible);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.import-progress__fill {
+  height: 100%;
+  width: 0%;
+  background: var(--admin-accent);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.import-progress.complete .import-progress__fill {
+  width: 100%;
+  background: var(--admin-success);
+}
+
+.import-progress.error .import-progress__fill {
+  width: 100%;
+  background: var(--admin-danger);
+}
+
+/* File Input Styling */
+.form-input--file {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background: var(--admin-surface);
+}
+
+.form-input--file::file-selector-button {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  border: 1px solid var(--admin-border-visible);
+  border-radius: 2px;
+  background: var(--admin-elevated);
+  color: var(--admin-text);
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.form-input--file::file-selector-button:hover {
+  background: var(--admin-accent);
+  color: var(--admin-bg);
+  border-color: var(--admin-accent);
+}
+
+.import-progress__text {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--admin-text-secondary);
+  white-space: nowrap;
+}
+
+.import-progress.complete .import-progress__text {
+  color: var(--admin-success);
+}
+
+.import-progress.error .import-progress__text {
+  color: var(--admin-danger);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

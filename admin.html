@@ -215,17 +215,84 @@
             <h3 class="card__title">Hero Section</h3>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Video Type</label>
+                <label class="form-label">Video Source</label>
                 <select id="hero-video-type" class="form-select">
-                  <option value="youtube">YouTube</option>
-                  <option value="googledrive">Google Drive</option>
+                  <option value="supabase">Supabase Storage (Recommended)</option>
+                  <option value="youtube">YouTube (Embed)</option>
+                  <option value="googledrive">Google Drive (Legacy)</option>
                 </select>
               </div>
               <div class="form-group">
-                <label class="form-label">Video ID</label>
-                <input type="text" id="hero-video-id" class="form-input" placeholder="YouTube ID or Drive File ID">
+                <label class="form-label">Video ID / Filename</label>
+                <input type="text" id="hero-video-id" class="form-input" placeholder="hero-video.mp4 or video ID">
+                <small class="form-hint" id="video-id-hint">For Supabase: just the filename (e.g., hero-video.mp4)</small>
               </div>
             </div>
+            
+            <!-- Direct Upload Section -->
+            <div class="import-section" id="upload-section">
+              <div class="import-section__header">
+                <h4 class="import-section__title">Upload Desktop Video</h4>
+                <span class="import-section__badge">Landscape 16:9</span>
+              </div>
+              <p class="import-section__desc">Upload a landscape video for desktop/large screens. Supports MP4, WebM, MOV formats.</p>
+              <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Select Video File</label>
+                  <input type="file" id="video-file-input" class="form-input form-input--file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov">
+                </div>
+                <div class="form-group" style="flex: 0 0 auto; align-self: flex-end;">
+                  <button type="button" class="btn btn--primary" id="upload-video-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    Upload
+                  </button>
+                </div>
+              </div>
+              <div class="import-progress hidden" id="upload-progress">
+                <div class="import-progress__bar">
+                  <div class="import-progress__fill" id="upload-progress-fill"></div>
+                </div>
+                <span class="import-progress__text" id="upload-progress-text">Uploading...</span>
+              </div>
+            </div>
+            
+            <!-- Mobile Video Upload Section -->
+            <div class="import-section import-section--secondary" id="mobile-upload-section">
+              <div class="import-section__header">
+                <h4 class="import-section__title">Upload Mobile Video</h4>
+                <span class="import-section__badge import-section__badge--secondary">Portrait 9:16 • Optional</span>
+              </div>
+              <p class="import-section__desc">Upload a portrait-oriented video for phones & tablets. If not set, desktop video will be used on all devices.</p>
+              <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Mobile Video Filename</label>
+                  <input type="text" id="hero-video-mobile" class="form-input" placeholder="hero-mobile.mp4 (leave empty to use desktop video)">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                  <label class="form-label">Select Mobile Video File</label>
+                  <input type="file" id="mobile-video-file-input" class="form-input form-input--file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov">
+                </div>
+                <div class="form-group" style="flex: 0 0 auto; align-self: flex-end;">
+                  <button type="button" class="btn btn--secondary" id="upload-mobile-video-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                    </svg>
+                    Upload
+                  </button>
+                </div>
+              </div>
+              <div class="import-progress hidden" id="mobile-upload-progress">
+                <div class="import-progress__bar">
+                  <div class="import-progress__fill" id="mobile-upload-progress-fill"></div>
+                </div>
+                <span class="import-progress__text" id="mobile-upload-progress-text">Uploading...</span>
+              </div>
+            </div>
+            
             <div class="form-group">
               <label class="form-label">Poster Image URL <small>(Google Drive)</small></label>
               <input type="url" id="hero-poster-url" class="form-input" placeholder="https://drive.google.com/uc?export=view&id=...">
@@ -246,25 +313,6 @@
               <label class="form-label">Portrait Image URL <small>(Google Drive)</small></label>
               <input type="url" id="about-portrait-url" class="form-input" placeholder="https://drive.google.com/uc?export=view&id=...">
               <div class="preview-wrapper" id="portrait-preview"></div>
-            </div>
-          </div>
-          
-          <div class="card">
-            <h3 class="card__title">Featured Projects</h3>
-            <p class="text-muted mb-2">Select which projects appear in the featured section on the home page.</p>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Featured #1</label>
-                <input type="text" id="featured-project-1" class="form-input" placeholder="Project ID (e.g., fringe)">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Featured #2</label>
-                <input type="text" id="featured-project-2" class="form-input" placeholder="Project ID">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Featured #3</label>
-              <input type="text" id="featured-project-3" class="form-input" placeholder="Project ID">
             </div>
           </div>
           
