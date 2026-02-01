@@ -21,14 +21,15 @@
   --admin-text-secondary: #b0a89f;
   --admin-text-muted: #7a736a;
   
-  /* Accent - Amber */
+  /* Accent - Amber (dynamically updated by JS) */
   --admin-accent: #d4a574;
   --admin-accent-hover: #e0b88a;
-  --admin-accent-glow: rgba(212, 165, 116, 0.25);
+  --admin-accent-rgb: 212, 165, 116;
+  --admin-accent-glow: rgba(var(--admin-accent-rgb), 0.25);
   
   /* Status Colors */
   --admin-success: #7cb87c;
-  --admin-warning: #d4a574;
+  --admin-warning: var(--admin-accent);
   --admin-danger: #c75c5c;
   
   /* Typography */
@@ -69,7 +70,7 @@ body {
   min-height: 100vh;
   padding: 2rem;
   background: 
-    radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 0%, rgba(var(--admin-accent-rgb), 0.03) 0%, transparent 50%),
     var(--admin-bg);
 }
 
@@ -432,6 +433,78 @@ body {
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
+   COLOR PICKER
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.color-picker-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-color {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 60px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--admin-border-visible);
+  border-radius: 4px;
+  background: var(--admin-bg);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.form-color::-webkit-color-swatch-wrapper {
+  padding: 4px;
+}
+
+.form-color::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.form-color::-moz-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.form-color:focus {
+  outline: none;
+  border-color: var(--admin-accent);
+  box-shadow: 0 0 0 3px var(--admin-accent-glow);
+}
+
+.color-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: 4px;
+}
+
+.color-preview__swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: var(--admin-accent);
+  border: 1px solid var(--admin-border-visible);
+  transition: background-color var(--transition-fast);
+}
+
+.color-preview__value {
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 0.8125rem;
+  color: var(--admin-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
    BUTTONS
    ───────────────────────────────────────────────────────────────────────────── */
 
@@ -757,8 +830,8 @@ body {
 }
 
 .alert--warning {
-  background: rgba(212, 165, 116, 0.08);
-  border: 1px solid rgba(212, 165, 116, 0.3);
+  background: rgba(var(--admin-accent-rgb), 0.08);
+  border: 1px solid rgba(var(--admin-accent-rgb), 0.3);
   color: var(--admin-warning);
 }
 
@@ -855,8 +928,8 @@ body {
 .import-section {
   margin-top: 1.5rem;
   padding: 1.5rem;
-  background: rgba(212, 165, 116, 0.05);
-  border: 1px solid rgba(212, 165, 116, 0.2);
+  background: rgba(var(--admin-accent-rgb), 0.05);
+  border: 1px solid rgba(var(--admin-accent-rgb), 0.2);
   border-radius: 4px;
 }
 

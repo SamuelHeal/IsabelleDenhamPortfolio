@@ -13,6 +13,9 @@ async function initializeSite() {
     // Load content from Supabase
     await contentManager.loadContent();
     
+    // Apply dynamic accent color from settings
+    applyAccentColor();
+    
     // Initialize common elements
     initNavigation();
     initScrollEffects();
@@ -40,6 +43,117 @@ async function initializeSite() {
       `;
     }
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ACCENT COLOR
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DEFAULT_ACCENT_COLOR = '#d4a574';
+
+function applyAccentColor() {
+  const settings = contentManager.getSettings();
+  const accentColor = settings?.accent_color || DEFAULT_ACCENT_COLOR;
+  
+  applyAccentColorToDocument(accentColor);
+}
+
+// Shared function to apply accent color - can be used by admin for live preview
+function applyAccentColorToDocument(accentColor, targetDocument = document) {
+  // Parse the hex color to RGB
+  const rgb = hexToRgb(accentColor);
+  if (!rgb) return;
+  
+  // Generate derived colors
+  const hoverColor = adjustLightness(accentColor, 15);
+  const hoverRgb = hexToRgb(hoverColor);
+  
+  // Apply to CSS custom properties
+  const root = targetDocument.documentElement;
+  
+  // Primary accent colors
+  root.style.setProperty('--accent-primary', accentColor);
+  root.style.setProperty('--accent-hover', hoverColor);
+  
+  // RGB values for rgba() usage in CSS
+  root.style.setProperty('--accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+  root.style.setProperty('--accent-hover-rgb', `${hoverRgb.r}, ${hoverRgb.g}, ${hoverRgb.b}`);
+  
+  // Pre-computed glow/opacity values
+  root.style.setProperty('--accent-glow', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.15)`);
+  root.style.setProperty('--accent-glow-strong', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`);
+  root.style.setProperty('--border-accent', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.3)`);
+}
+
+function hexToRgb(hex) {
+  // Remove # if present
+  hex = hex.replace(/^#/, '');
+  
+  // Parse hex values
+  const result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function adjustLightness(hex, percent) {
+  // Convert hex to HSL, adjust lightness, convert back
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  
+  // Convert RGB to HSL
+  let r = rgb.r / 255;
+  let g = rgb.g / 255;
+  let b = rgb.b / 255;
+  
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  
+  // Adjust lightness
+  l = Math.min(1, Math.max(0, l + percent / 100));
+  
+  // Convert HSL back to RGB
+  let r2, g2, b2;
+  if (s === 0) {
+    r2 = g2 = b2 = l;
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r2 = hue2rgb(p, q, h + 1/3);
+    g2 = hue2rgb(p, q, h);
+    b2 = hue2rgb(p, q, h - 1/3);
+  }
+  
+  // Convert back to hex
+  const toHex = (c) => {
+    const hex = Math.round(c * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  
+  return `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -279,6 +393,6 @@ export const socialIcons = {
 
 document.addEventListener('DOMContentLoaded', initializeSite);
 
-export { contentManager };
+export { contentManager, applyAccentColorToDocument, hexToRgb, adjustLightness };
 
 

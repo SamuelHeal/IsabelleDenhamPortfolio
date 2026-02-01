@@ -40,8 +40,12 @@
   /* Amber Accent (tungsten/practical light feel) */
   --accent-primary: #d4a574;
   --accent-hover: #e8c49a;
-  --accent-glow: rgba(212, 165, 116, 0.15);
-  --accent-glow-strong: rgba(212, 165, 116, 0.3);
+  --accent-glow: rgba(var(--accent-rgb), 0.15);
+  --accent-glow-strong: rgba(var(--accent-rgb), 0.3);
+  
+  /* Accent RGB components for dynamic opacity usage */
+  --accent-rgb: 212, 165, 116;
+  --accent-hover-rgb: 232, 196, 154;
 
   /* Steel Blue Secondary (cool contrast) */
   --accent-secondary: #5a7a8a;
@@ -50,7 +54,7 @@
   /* Utility */
   --border-subtle: rgba(245, 240, 232, 0.06);
   --border-visible: rgba(245, 240, 232, 0.12);
-  --border-accent: rgba(212, 165, 116, 0.3);
+  --border-accent: rgba(var(--accent-rgb), 0.3);
 
   /* Typography */
   --font-heading: "Bebas Neue", sans-serif;
@@ -297,10 +301,10 @@ p {
 }
 
 .btn--primary {
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.95) 0%, rgba(232, 196, 154, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.95) 0%, rgba(var(--accent-hover-rgb), 0.95) 100%);
   color: var(--bg-primary);
-  border: 1px solid rgba(212, 165, 116, 0.6);
-  box-shadow: 0 2px 20px rgba(212, 165, 116, 0.15),
+  border: 1px solid rgba(var(--accent-rgb), 0.6);
+  box-shadow: 0 2px 20px rgba(var(--accent-rgb), 0.15),
               inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -308,7 +312,7 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(232, 196, 154, 1) 0%, rgba(212, 165, 116, 1) 100%);
+  background: linear-gradient(135deg, rgba(var(--accent-hover-rgb), 1) 0%, rgba(var(--accent-rgb), 1) 100%);
   opacity: 0;
   transition: opacity var(--transition-base);
   z-index: -1;
@@ -317,7 +321,7 @@ p {
 .btn--primary:hover {
   color: var(--bg-primary);
   border-color: var(--accent-hover);
-  box-shadow: 0 4px 30px rgba(212, 165, 116, 0.35),
+  box-shadow: 0 4px 30px rgba(var(--accent-rgb), 0.35),
               inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
 }
@@ -841,7 +845,7 @@ p {
   font-size: 10px;
   font-weight: 600;
   border-radius: 50%;
-  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.4);
+  box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
   transition: all var(--transition-base);
   animation: badgePulse 2s ease-in-out infinite;
 }
@@ -855,11 +859,11 @@ p {
 @keyframes badgePulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 2px 8px rgba(212, 165, 116, 0.4);
+    box-shadow: 0 2px 8px rgba(var(--accent-rgb), 0.4);
   }
   50% {
     transform: scale(1.1);
-    box-shadow: 0 2px 12px rgba(212, 165, 116, 0.6);
+    box-shadow: 0 2px 12px rgba(var(--accent-rgb), 0.6);
   }
 }
 
@@ -888,14 +892,14 @@ p {
 /* Sound button — Prominent accent styling when muted */
 .hero__control-btn--sound.muted {
   border-color: var(--accent-primary);
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.15) 0%, rgba(212, 165, 116, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15) 0%, rgba(var(--accent-rgb), 0.05) 100%);
   color: var(--accent-primary);
 }
 
 .hero__control-btn--sound.muted:hover {
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.25) 0%, rgba(212, 165, 116, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.25) 0%, rgba(var(--accent-rgb), 0.1) 100%);
   border-color: var(--accent-hover);
-  box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.2);
 }
 
 /* Sound button when video is unmuted (playing sound) */
@@ -917,10 +921,10 @@ p {
 
 @keyframes soundAttention {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(212, 165, 116, 0);
+    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
   }
   50% {
-    box-shadow: 0 0 25px 6px rgba(212, 165, 116, 0.3);
+    box-shadow: 0 0 25px 6px rgba(var(--accent-rgb), 0.3);
   }
 }
 
@@ -1137,7 +1141,7 @@ p {
   }
   
   .hero__ctas .btn--primary {
-    box-shadow: 0 2px 16px rgba(212, 165, 116, 0.2);
+    box-shadow: 0 2px 16px rgba(var(--accent-rgb), 0.2);
   }
   
   /* Video controls — right side of bottom row */
@@ -1190,7 +1194,7 @@ p {
   height: 60%;
   background: radial-gradient(
     ellipse at center,
-    rgba(212, 165, 116, 0.03) 0%,
+    rgba(var(--accent-rgb), 0.03) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -1338,7 +1342,7 @@ p {
   height: 80%;
   background: radial-gradient(
     ellipse at center,
-    rgba(212, 165, 116, 0.03) 0%,
+    rgba(var(--accent-rgb), 0.03) 0%,
     transparent 60%
   );
   pointer-events: none;
@@ -1739,7 +1743,7 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1) 0%, transparent 100%);
   opacity: 0;
   transition: opacity var(--transition-slow);
 }

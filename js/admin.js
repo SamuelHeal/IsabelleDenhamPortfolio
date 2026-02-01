@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupNavigation();
   setupProjectListeners();
   setupVideoImport();
+  setupColorPicker();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -209,6 +210,8 @@ function switchPanel(panelName) {
 // POPULATE FORMS
 // ─────────────────────────────────────────────────────────────────────────────
 
+const DEFAULT_ACCENT_COLOR = '#d4a574';
+
 function populateSiteSettings() {
   const settings = contentManager.getSettings();
   if (!settings) return;
@@ -221,6 +224,118 @@ function populateSiteSettings() {
   document.getElementById('social-linkedin').value = settings.social_linkedin || '';
   document.getElementById('footer-heading').value = settings.footer_heading || '';
   document.getElementById('footer-copyright').value = settings.footer_copyright || '';
+  
+  // Accent color
+  const accentColor = settings.accent_color || DEFAULT_ACCENT_COLOR;
+  updateColorPicker(accentColor);
+}
+
+function updateColorPicker(color) {
+  const colorInput = document.getElementById('accent-color');
+  const colorSwatch = document.getElementById('color-swatch');
+  const colorValue = document.getElementById('color-value');
+  
+  if (colorInput) colorInput.value = color;
+  if (colorSwatch) colorSwatch.style.backgroundColor = color;
+  if (colorValue) colorValue.textContent = color.toUpperCase();
+  
+  // Apply live preview to admin page
+  applyAdminAccentColor(color);
+}
+
+function applyAdminAccentColor(hexColor) {
+  // Parse hex to RGB
+  const rgb = hexToRgb(hexColor);
+  if (!rgb) return;
+  
+  // Generate hover color (lighter version)
+  const hoverColor = adjustLightness(hexColor, 15);
+  
+  // Apply to admin CSS custom properties
+  const root = document.documentElement;
+  root.style.setProperty('--admin-accent', hexColor);
+  root.style.setProperty('--admin-accent-hover', hoverColor);
+  root.style.setProperty('--admin-accent-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+  root.style.setProperty('--admin-accent-glow', `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`);
+}
+
+// Color utility functions
+function hexToRgb(hex) {
+  hex = hex.replace(/^#/, '');
+  const result = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function adjustLightness(hex, percent) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return hex;
+  
+  let r = rgb.r / 255;
+  let g = rgb.g / 255;
+  let b = rgb.b / 255;
+  
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s, l = (max + min) / 2;
+  
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  
+  l = Math.min(1, Math.max(0, l + percent / 100));
+  
+  let r2, g2, b2;
+  if (s === 0) {
+    r2 = g2 = b2 = l;
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r2 = hue2rgb(p, q, h + 1/3);
+    g2 = hue2rgb(p, q, h);
+    b2 = hue2rgb(p, q, h - 1/3);
+  }
+  
+  const toHex = (c) => {
+    const hex = Math.round(c * 255).toString(16);
+    return hex.length === 1 ? '0' + hex : hex;
+  };
+  
+  return `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
+}
+
+function setupColorPicker() {
+  const colorInput = document.getElementById('accent-color');
+  const resetBtn = document.getElementById('reset-color-btn');
+  
+  // Update preview when color changes
+  colorInput?.addEventListener('input', (e) => {
+    updateColorPicker(e.target.value);
+  });
+  
+  // Reset to default
+  resetBtn?.addEventListener('click', () => {
+    updateColorPicker(DEFAULT_ACCENT_COLOR);
+  });
 }
 
 function populateHomeSettings() {
@@ -273,7 +388,8 @@ window.saveSiteSettings = async function() {
       social_instagram: document.getElementById('social-instagram').value,
       social_linkedin: document.getElementById('social-linkedin').value,
       footer_heading: document.getElementById('footer-heading').value,
-      footer_copyright: document.getElementById('footer-copyright').value
+      footer_copyright: document.getElementById('footer-copyright').value,
+      accent_color: document.getElementById('accent-color').value
     });
     showAlert('success', 'Site settings saved!');
   } catch (error) {
