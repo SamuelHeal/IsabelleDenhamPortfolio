@@ -1,17 +1,44 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// CONTACT.JS — Contact page functionality
+// CONTACT.JS — Contact page functionality with EmailJS integration
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { contentManager, socialIcons } from './main.js';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EMAILJS CONFIGURATION
+// ─────────────────────────────────────────────────────────────────────────────
+// Get these values from your EmailJS dashboard:
+// 1. Public Key: Account → API Keys → Public Key
+// 2. Service ID: Email Services → Your service ID (e.g., 'service_xxxxxxx')
+// 3. Template ID: Email Templates → Your template ID (e.g., 'template_xxxxxxx')
+
+const EMAILJS_CONFIG = {
+  publicKey: '52f7Q_JlEcxM4OUlN',
+  serviceId: 'isabelle.denham@gmail.co',
+  templateId: 'template_u1cs3rp'
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INITIALIZE CONTACT PAGE
 // ─────────────────────────────────────────────────────────────────────────────
 
 document.addEventListener('content-ready', () => {
+  initEmailJS();
   renderContactPage();
   initContactForm();
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INITIALIZE EMAILJS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function initEmailJS() {
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init(EMAILJS_CONFIG.publicKey);
+  } else {
+    console.warn('EmailJS SDK not loaded');
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RENDER CONTACT PAGE
@@ -31,12 +58,6 @@ function renderContactPage() {
   const subheading = document.getElementById('contact-subheading');
   if (subheading && settings.contact_page_subheading) {
     subheading.textContent = settings.contact_page_subheading;
-  }
-  
-  // Update form action
-  const form = document.getElementById('contact-form');
-  if (form && settings.form_endpoint) {
-    form.action = settings.form_endpoint;
   }
   
   // Update direct email
@@ -76,24 +97,45 @@ function initContactForm() {
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     
+    // Check for honeypot (spam protection)
+    const honeypot = form.querySelector('[name="_gotcha"]');
+    if (honeypot && honeypot.value) {
+      console.warn('Spam detected');
+      return;
+    }
+    
     // Validate
     if (!validateForm(form)) return;
+    
+    // Check EmailJS is configured
+    if (EMAILJS_CONFIG.publicKey === 'YOUR_PUBLIC_KEY') {
+      showMessage('error', 'Contact form not configured. Please email directly.');
+      return;
+    }
     
     // Show loading state
     submitBtn.disabled = true;
     submitBtn.textContent = 'Sending...';
     
     try {
-      const formData = new FormData(form);
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      // Prepare template parameters
+      // These should match your EmailJS template variables
+      const templateParams = {
+        from_name: form.querySelector('[name="name"]').value,
+        from_email: form.querySelector('[name="email"]').value,
+        subject: form.querySelector('[name="subject"]').value || 'No subject',
+        message: form.querySelector('[name="message"]').value,
+        reply_to: form.querySelector('[name="email"]').value
+      };
       
-      if (response.ok) {
+      // Send via EmailJS
+      const response = await emailjs.send(
+        EMAILJS_CONFIG.serviceId,
+        EMAILJS_CONFIG.templateId,
+        templateParams
+      );
+      
+      if (response.status === 200) {
         showMessage('success', 'Message sent successfully! I\'ll get back to you soon.');
         form.reset();
       } else {
