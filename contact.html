@@ -61,9 +61,9 @@
         <p class="contact-page__subheading" id="contact-subheading">For collaborations, inquiries, or just to connect.</p>
       </header>
       
-      <form class="contact-form" id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <form class="contact-form" id="contact-form">
         <!-- Honeypot for spam protection -->
-        <input type="text" name="_gotcha" style="display: none;">
+        <input type="text" name="_gotcha" style="display: none;" autocomplete="off">
         
         <div class="contact-form__row">
           <div class="contact-form__group">
@@ -143,6 +143,9 @@
     </div>
   </footer>
 
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  
   <!-- Scripts -->
   <script type="module" src="js/contact.js"></script>
 </body>

@@ -567,6 +567,7 @@ window.editProject = function(projectId) {
   document.getElementById('project-thumbnail').value = project.thumbnail_url || '';
   document.getElementById('project-video-type').value = project.video_type || 'youtube';
   document.getElementById('project-video-id').value = project.video_id || '';
+  document.getElementById('project-external-url').value = project.external_url || '';
   document.getElementById('project-description').value = project.description || '';
   populateAwards(project.awards || project.nominations || []);
   document.getElementById('project-featured').checked = project.featured || false;
@@ -588,6 +589,7 @@ function clearProjectForm() {
   document.getElementById('project-thumbnail').value = '';
   document.getElementById('project-video-type').value = 'youtube';
   document.getElementById('project-video-id').value = '';
+  document.getElementById('project-external-url').value = '';
   document.getElementById('project-description').value = '';
   clearAwards();
   document.getElementById('project-featured').checked = false;
@@ -601,6 +603,8 @@ async function saveProject() {
   btn.disabled = true;
   btn.textContent = 'Saving...';
   
+  const externalUrl = document.getElementById('project-external-url').value.trim();
+  
   const projectData = {
     id: document.getElementById('project-id').value || generateSlug(document.getElementById('project-title').value),
     title: document.getElementById('project-title').value,
@@ -611,6 +615,7 @@ async function saveProject() {
     thumbnail_url: document.getElementById('project-thumbnail').value,
     video_type: document.getElementById('project-video-type').value,
     video_id: document.getElementById('project-video-id').value,
+    external_url: externalUrl || null,
     description: document.getElementById('project-description').value,
     awards: getAwardsData(),
     featured: document.getElementById('project-featured').checked,
