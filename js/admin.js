@@ -564,6 +564,7 @@ window.editProject = function(projectId) {
   document.getElementById('project-video-id').value = project.video_id || '';
   document.getElementById('project-external-url').value = project.external_url || '';
   document.getElementById('project-description').value = project.description || '';
+  document.getElementById('project-nominations').value = project.nominations || '';
   document.getElementById('project-featured').checked = project.featured || false;
   document.getElementById('project-show-border').checked = project.show_home_border || false;
   
@@ -585,6 +586,7 @@ function clearProjectForm() {
   document.getElementById('project-video-id').value = '';
   document.getElementById('project-external-url').value = '';
   document.getElementById('project-description').value = '';
+  document.getElementById('project-nominations').value = '';
   document.getElementById('project-featured').checked = false;
   document.getElementById('project-show-border').checked = false;
   document.getElementById('thumbnail-preview').innerHTML = '';
@@ -610,6 +612,7 @@ async function saveProject() {
     video_id: document.getElementById('project-video-id').value,
     external_url: externalUrl || null,
     description: document.getElementById('project-description').value,
+    nominations: document.getElementById('project-nominations').value,
     featured: document.getElementById('project-featured').checked,
     show_home_border: document.getElementById('project-show-border').checked
   };

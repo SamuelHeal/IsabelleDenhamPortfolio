@@ -35,44 +35,15 @@ function renderProjectPage() {
   // Update page title
   document.title = `${project.title} — Isabelle Denham`;
   
-  // Update video OR external link cover
-  const videoContainer = document.getElementById('project-video');
-  if (videoContainer) {
-    // Check if this is an external URL project (cover photo links out)
-    if (project.external_url) {
-      const thumbnailUrl = project.thumbnail_url 
-        ? convertGoogleDriveUrl(project.thumbnail_url)
-        : 'https://placehold.co/1100x468/030303/f5f0e8?text=No+Image';
-      
-      videoContainer.classList.add('project-page__video--external');
-      videoContainer.innerHTML = `
-        <a href="${project.external_url}" 
-           class="project-page__external-link" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           aria-label="Visit external website for ${project.title}">
-          <img 
-            src="${thumbnailUrl}" 
-            alt="${project.title}" 
-            class="project-page__cover"
-            onerror="this.src='https://placehold.co/1100x468/030303/f5f0e8?text=No+Image'"
-          >
-          <div class="project-page__external-overlay">
-            <div class="project-page__external-indicator">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
-                <polyline points="15 3 21 3 21 9"/>
-                <line x1="10" y1="14" x2="21" y2="3"/>
-              </svg>
-              <span>View Project</span>
-            </div>
-          </div>
-        </a>
-      `;
-    } else if (project.video_id) {
-      // Standard video embed
+  // Update video or poster image
+  const mediaContainer = document.getElementById('project-video');
+  const heroContainer = document.getElementById('project-hero');
+  
+  if (mediaContainer) {
+    if (project.video_id) {
+      // Show video embed
       const embedUrl = createVideoEmbed(project.video_type, project.video_id);
-      videoContainer.innerHTML = `
+      mediaContainer.innerHTML = `
         <iframe 
           src="${embedUrl}" 
           frameborder="0" 
@@ -80,6 +51,36 @@ function renderProjectPage() {
           allowfullscreen
         ></iframe>
       `;
+      mediaContainer.classList.add('project-page__media--video');
+      if (heroContainer) heroContainer.classList.add('project-page__hero--video');
+    } else if (project.thumbnail_url) {
+      // Show poster image instead - detect orientation on load
+      const posterUrl = convertGoogleDriveUrl(project.thumbnail_url);
+      const img = document.createElement('img');
+      img.src = posterUrl;
+      img.alt = `${project.title} poster`;
+      img.className = 'project-page__poster-image';
+      
+      img.onload = function() {
+        const isPortrait = img.naturalHeight > img.naturalWidth;
+        
+        if (isPortrait && heroContainer) {
+          // Portrait: apply two-column layout
+          heroContainer.classList.add('project-page__hero--portrait');
+          mediaContainer.classList.add('project-page__media--portrait');
+        } else if (heroContainer) {
+          // Landscape: keep stacked layout
+          heroContainer.classList.add('project-page__hero--landscape');
+          mediaContainer.classList.add('project-page__media--landscape');
+        }
+      };
+      
+      mediaContainer.innerHTML = '';
+      mediaContainer.appendChild(img);
+      mediaContainer.classList.add('project-page__media--poster');
+    } else {
+      // Hide container if neither video nor poster
+      mediaContainer.style.display = 'none';
     }
   }
   
@@ -107,6 +108,40 @@ function renderProjectPage() {
   const description = document.getElementById('project-description');
   if (description) {
     description.innerHTML = formatTextWithLineBreaks(project.description || '');
+  }
+  
+  // Update nominations (displayed above description with laurel styling)
+  const nominationsSection = document.getElementById('project-nominations');
+  if (nominationsSection) {
+    const nominations = project.nominations;
+    
+    if (nominations && nominations.trim()) {
+      // Split by newlines and filter empty lines
+      const nominationsList = nominations.split('\n').filter(n => n.trim());
+      
+      nominationsSection.innerHTML = `
+        <div class="project-page__nominations">
+          ${nominationsList.map(nomination => `
+            <div class="project-page__nomination">
+              <div class="nomination__laurel nomination__laurel--left">
+                <svg viewBox="0 0 40 80" fill="currentColor">
+                  <path d="M38 40c0-8-4-15-10-20 2-4 2-9 0-13-4 6-10 10-18 10 0 6 2 11 6 15-4 4-6 9-6 15s2 11 6 15c-4 4-6 9-6 15 8 0 14-4 18-10 2-4 2-9 0-13 6-5 10-12 10-20z"/>
+                </svg>
+              </div>
+              <span class="nomination__text">${nomination.trim()}</span>
+              <div class="nomination__laurel nomination__laurel--right">
+                <svg viewBox="0 0 40 80" fill="currentColor">
+                  <path d="M2 40c0-8 4-15 10-20-2-4-2-9 0-13 4 6 10 10 18 10 0 6-2 11-6 15 4 4 6 9 6 15s-2 11-6 15c4 4 6 9 6 15-8 0-14-4-18-10-2-4-2-9 0-13-6-5-10-12-10-20z"/>
+                </svg>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      nominationsSection.style.display = 'block';
+    } else {
+      nominationsSection.style.display = 'none';
+    }
   }
   
   // Update credits

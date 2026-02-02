@@ -62,21 +62,31 @@
         Back to Work
       </a>
       
-      <div class="project-page__video" id="project-video">
-        <!-- Video loaded dynamically -->
-      </div>
-      
-      <div class="project-page__content">
-        <span class="project-page__label" id="project-type">Project</span>
-        <h1 class="project-page__title" id="project-title">Project Title</h1>
-        <p class="project-page__subtitle" id="project-subtitle">Subtitle</p>
-        
-        <div class="project-page__meta" id="project-meta">
-          <span>Type</span>
-          <span>Year</span>
-          <span>Role</span>
+      <!-- Hero section: video/poster + header info (becomes 2-col for portrait posters) -->
+      <div class="project-page__hero" id="project-hero">
+        <div class="project-page__media" id="project-video">
+          <!-- Video or poster loaded dynamically -->
         </div>
         
+        <div class="project-page__header" id="project-header">
+          <span class="project-page__label" id="project-type">Project</span>
+          <h1 class="project-page__title" id="project-title">Project Title</h1>
+          <p class="project-page__subtitle" id="project-subtitle">Subtitle</p>
+          
+          <div class="project-page__meta" id="project-meta">
+            <span>Type</span>
+            <span>Year</span>
+            <span>Role</span>
+          </div>
+          
+          <div id="project-nominations">
+            <!-- Nominations/awards loaded dynamically -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Content below hero -->
+      <div class="project-page__content">
         <p class="project-page__description" id="project-description">
           Project description will be loaded here.
         </p>
