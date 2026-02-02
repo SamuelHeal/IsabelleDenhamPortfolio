@@ -53,7 +53,71 @@ function renderProjectPage() {
   const heroContainer = document.getElementById('project-hero');
   
   if (mediaContainer) {
-    if (project.video_id) {
+    // Check if this project has an external URL (clickable thumbnail)
+    if (project.external_url && project.external_url.trim() && project.thumbnail_url) {
+      // Show clickable thumbnail that links to external website
+      const posterUrl = convertGoogleDriveUrl(project.thumbnail_url);
+      
+      const link = document.createElement('a');
+      link.href = project.external_url;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.className = 'project-page__external-link';
+      link.setAttribute('aria-label', `View ${project.title} on external website`);
+      
+      const img = document.createElement('img');
+      img.src = posterUrl;
+      img.alt = `${project.title} - Click to visit website`;
+      img.className = 'project-page__poster-image';
+      
+      // Persistent badge indicator (always visible)
+      const badge = document.createElement('div');
+      badge.className = 'project-page__external-badge';
+      badge.innerHTML = `
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        <span>Visit Site</span>
+      `;
+      
+      // External link overlay with icon (appears on hover)
+      const overlay = document.createElement('div');
+      overlay.className = 'project-page__external-overlay';
+      overlay.innerHTML = `
+        <div class="project-page__external-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </div>
+        <span class="project-page__external-label">View Project</span>
+      `;
+      
+      link.appendChild(img);
+      link.appendChild(badge);
+      link.appendChild(overlay);
+      
+      img.onload = function() {
+        const isPortrait = img.naturalHeight > img.naturalWidth;
+        
+        if (isPortrait && heroContainer) {
+          heroContainer.classList.add('project-page__hero--portrait');
+          mediaContainer.classList.add('project-page__media--portrait');
+        } else if (heroContainer) {
+          heroContainer.classList.add('project-page__hero--landscape');
+          mediaContainer.classList.add('project-page__media--landscape');
+        }
+      };
+      
+      mediaContainer.innerHTML = '';
+      mediaContainer.appendChild(link);
+      mediaContainer.classList.add('project-page__media--poster', 'project-page__media--external');
+      if (heroContainer) heroContainer.classList.add('project-page__hero--external');
+      
+    } else if (project.video_id) {
       // Show video embed
       const embedUrl = createVideoEmbed(project.video_type, project.video_id);
       mediaContainer.innerHTML = `

@@ -500,6 +500,51 @@ function setupProjectListeners() {
   document.getElementById('add-award-btn')?.addEventListener('click', () => {
     addAwardEntry();
   });
+  
+  // Media type selector buttons
+  setupMediaTypeSelector();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MEDIA TYPE SELECTOR
+// ─────────────────────────────────────────────────────────────────────────────
+
+let currentMediaType = 'video';
+
+function setupMediaTypeSelector() {
+  const selector = document.getElementById('media-type-selector');
+  if (!selector) return;
+  
+  const buttons = selector.querySelectorAll('.media-type-btn');
+  
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const type = btn.dataset.type;
+      setMediaType(type);
+    });
+  });
+}
+
+function setMediaType(type) {
+  currentMediaType = type;
+  
+  // Update button states
+  const buttons = document.querySelectorAll('.media-type-btn');
+  buttons.forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+  
+  // Show/hide appropriate options
+  const videoOptions = document.getElementById('video-options');
+  const externalOptions = document.getElementById('external-options');
+  
+  if (type === 'video') {
+    videoOptions?.classList.remove('hidden');
+    externalOptions?.classList.add('hidden');
+  } else {
+    videoOptions?.classList.add('hidden');
+    externalOptions?.classList.remove('hidden');
+  }
 }
 
 function renderProjectsList() {
@@ -574,6 +619,13 @@ window.editProject = function(projectId) {
   document.getElementById('project-featured').checked = project.featured || false;
   document.getElementById('project-show-border').checked = project.show_home_border || false;
   
+  // Set media type based on whether external_url is set
+  if (project.external_url && project.external_url.trim()) {
+    setMediaType('external');
+  } else {
+    setMediaType('video');
+  }
+  
   updatePreview('project-thumbnail', 'thumbnail-preview');
   
   document.getElementById('delete-project').classList.remove('hidden');
@@ -598,6 +650,9 @@ function clearProjectForm() {
   document.getElementById('project-show-border').checked = false;
   document.getElementById('thumbnail-preview').innerHTML = '';
   document.getElementById('delete-project').classList.add('hidden');
+  
+  // Reset media type to video
+  setMediaType('video');
 }
 
 async function saveProject() {
@@ -605,7 +660,8 @@ async function saveProject() {
   btn.disabled = true;
   btn.textContent = 'Saving...';
   
-  const externalUrl = document.getElementById('project-external-url').value.trim();
+  // Build project data based on media type
+  const isExternalLink = currentMediaType === 'external';
   
   const projectData = {
     id: document.getElementById('project-id').value || generateSlug(document.getElementById('project-title').value),
@@ -616,9 +672,10 @@ async function saveProject() {
     role: document.getElementById('project-role').value,
     status: document.getElementById('project-status').value || null,
     thumbnail_url: document.getElementById('project-thumbnail').value,
-    video_type: document.getElementById('project-video-type').value,
-    video_id: document.getElementById('project-video-id').value,
-    external_url: externalUrl || null,
+    // If external link, clear video fields; otherwise clear external_url
+    video_type: isExternalLink ? null : document.getElementById('project-video-type').value,
+    video_id: isExternalLink ? null : document.getElementById('project-video-id').value,
+    external_url: isExternalLink ? document.getElementById('project-external-url').value : null,
     description: document.getElementById('project-description').value,
     awards: getAwardsData(),
     featured: document.getElementById('project-featured').checked,
