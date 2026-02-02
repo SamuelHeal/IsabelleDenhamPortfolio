@@ -458,9 +458,33 @@
           <div class="preview-wrapper" id="thumbnail-preview"></div>
         </div>
         
-        <div class="form-row">
+        <!-- Media Type Selection -->
+        <div class="form-group">
+          <label class="form-label">Media Type</label>
+          <div class="media-type-selector" id="media-type-selector">
+            <button type="button" class="media-type-btn active" data-type="video">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="23 7 16 12 23 17 23 7"/>
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+              </svg>
+              <span>Video</span>
+            </button>
+            <button type="button" class="media-type-btn" data-type="external">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <span>External Link</span>
+            </button>
+          </div>
+          <small class="form-hint">Choose "External Link" to display thumbnail as a clickable link to an external website</small>
+        </div>
+        
+        <!-- Video Options (shown when video type selected) -->
+        <div class="form-row media-options" id="video-options">
           <div class="form-group">
-            <label class="form-label">Video Type</label>
+            <label class="form-label">Video Platform</label>
             <select id="project-video-type" class="form-select">
               <option value="youtube">YouTube</option>
               <option value="googledrive">Google Drive</option>
@@ -468,7 +492,37 @@
           </div>
           <div class="form-group">
             <label class="form-label">Video ID</label>
-            <input type="text" id="project-video-id" class="form-input" placeholder="Video ID">
+            <input type="text" id="project-video-id" class="form-input" placeholder="Video ID from URL">
+            <small class="form-hint">The unique ID from the video URL (e.g., dQw4w9WgXcQ for YouTube)</small>
+          </div>
+        </div>
+        
+        <!-- External URL Options (shown when external type selected) -->
+        <div class="media-options hidden" id="external-options">
+          <div class="form-group">
+            <label class="form-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 4px;">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              External Website URL
+            </label>
+            <input type="url" id="project-external-url" class="form-input" placeholder="https://example.com/project">
+            <small class="form-hint">The thumbnail image will be displayed and clicking it will open this URL in a new tab</small>
+          </div>
+          <div class="external-url-preview">
+            <div class="external-url-preview__icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="14" rx="2"/>
+                <path d="M3 9h18"/>
+                <circle cx="6" cy="6" r="1" fill="currentColor"/>
+                <circle cx="9" cy="6" r="1" fill="currentColor"/>
+              </svg>
+            </div>
+            <div class="external-url-preview__text">
+              <strong>How it works:</strong> On the project page, visitors will see the thumbnail image instead of a video player. Clicking the image opens the external website in a new tab.
+            </div>
           </div>
         </div>
         
