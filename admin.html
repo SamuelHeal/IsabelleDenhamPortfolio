@@ -452,17 +452,35 @@
           <div class="preview-wrapper" id="thumbnail-preview"></div>
         </div>
         
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">Video Type</label>
-            <select id="project-video-type" class="form-select">
-              <option value="youtube">YouTube</option>
-              <option value="googledrive">Google Drive</option>
-            </select>
+        <div class="card card--inline">
+          <h4 class="card__subtitle">Media Display</h4>
+          <p class="form-hint" style="margin-bottom: 1rem;">Choose either a video OR an external URL. When an external URL is set, the cover photo will be displayed instead of a video player.</p>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Video Type</label>
+              <select id="project-video-type" class="form-select">
+                <option value="youtube">YouTube</option>
+                <option value="googledrive">Google Drive</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Video ID</label>
+              <input type="text" id="project-video-id" class="form-input" placeholder="Video ID">
+            </div>
           </div>
+          
+          <div class="form-divider">
+            <span>OR</span>
+          </div>
+          
           <div class="form-group">
-            <label class="form-label">Video ID</label>
-            <input type="text" id="project-video-id" class="form-input" placeholder="Video ID">
+            <label class="form-label">
+              External URL
+              <span class="form-label__badge">Link Only</span>
+            </label>
+            <input type="url" id="project-external-url" class="form-input" placeholder="https://example.com">
+            <small class="form-hint">When set, the cover photo becomes a clickable link to this URL (no video player).</small>
           </div>
         </div>
         
@@ -482,6 +500,14 @@
             <input type="checkbox" id="project-featured">
             Feature on home page
           </label>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" id="project-show-border">
+            Show cinematic border in Selected Works (home page only)
+          </label>
+          <small class="form-hint" style="margin-left: 1.5rem; margin-top: 0.25rem;">Adds a stylized accent border around this project's card in the Selected Works section.</small>
         </div>
       </div>
       
