@@ -563,7 +563,9 @@ window.editProject = function(projectId) {
   document.getElementById('project-video-type').value = project.video_type || 'youtube';
   document.getElementById('project-video-id').value = project.video_id || '';
   document.getElementById('project-description').value = project.description || '';
+  document.getElementById('project-nominations').value = project.nominations || '';
   document.getElementById('project-featured').checked = project.featured || false;
+  document.getElementById('project-show-border').checked = project.show_home_border || false;
   
   updatePreview('project-thumbnail', 'thumbnail-preview');
   
@@ -582,7 +584,9 @@ function clearProjectForm() {
   document.getElementById('project-video-type').value = 'youtube';
   document.getElementById('project-video-id').value = '';
   document.getElementById('project-description').value = '';
+  document.getElementById('project-nominations').value = '';
   document.getElementById('project-featured').checked = false;
+  document.getElementById('project-show-border').checked = false;
   document.getElementById('thumbnail-preview').innerHTML = '';
   document.getElementById('delete-project').classList.add('hidden');
 }
@@ -603,7 +607,9 @@ async function saveProject() {
     video_type: document.getElementById('project-video-type').value,
     video_id: document.getElementById('project-video-id').value,
     description: document.getElementById('project-description').value,
-    featured: document.getElementById('project-featured').checked
+    nominations: document.getElementById('project-nominations').value,
+    featured: document.getElementById('project-featured').checked,
+    show_home_border: document.getElementById('project-show-border').checked
   };
   
   try {

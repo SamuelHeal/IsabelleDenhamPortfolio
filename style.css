@@ -34,8 +34,8 @@
 
   /* Warm White Text (like tungsten-lit film) */
   --text-primary: #f5f0e8;
-  --text-secondary: #8a857d;
-  --text-muted: #5a5650;
+  --text-secondary: #a8a29e;
+  --text-muted: #7a756e;
 
   /* Amber Accent (tungsten/practical light feel) */
   --accent-primary: #d4a574;
@@ -1182,6 +1182,7 @@ p {
 .about {
   background: var(--bg-primary);
   position: relative;
+  padding-bottom: var(--space-lg);
 }
 
 /* Subtle light leak accent */
@@ -1328,8 +1329,10 @@ p {
 
 .featured-work {
   position: relative;
-  background: var(--bg-secondary);
+  background: var(--bg-primary);
   overflow: hidden;
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
 }
 
 /* Ambient light leak effect */
@@ -1348,23 +1351,6 @@ p {
   pointer-events: none;
 }
 
-/* Top border accent */
-.featured-work::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--border-accent) 50%,
-    transparent 100%
-  );
-}
-
 .featured-work__inner {
   display: flex;
   flex-direction: column;
@@ -1375,7 +1361,7 @@ p {
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  margin-bottom: var(--space-lg);
+  margin-bottom: var(--space-md);
 }
 
 .featured-work__label {
@@ -1400,7 +1386,7 @@ p {
 .featured-work__main {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
   max-width: 1100px;
   margin: 0 auto;
 }
@@ -1489,9 +1475,9 @@ p {
 
 .spotlight-card__poster {
   position: relative;
-  aspect-ratio: 2 / 3;
   overflow: hidden;
   background: var(--bg-card);
+  line-height: 0;
 }
 
 /* Frame border */
@@ -1537,9 +1523,8 @@ p {
 
 .spotlight-card__poster img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  height: auto;
+  display: block;
   transition: transform var(--transition-cinematic), filter var(--transition-slow);
   filter: grayscale(30%) contrast(1.08) brightness(0.95);
 }
@@ -1647,8 +1632,8 @@ p {
 .spotlight-card__tagline {
   font-family: var(--font-body);
   font-size: var(--body);
-  font-weight: 300;
-  color: var(--text-muted);
+  font-weight: 400;
+  color: var(--text-secondary);
   margin-bottom: var(--space-md);
   letter-spacing: var(--tracking-wide);
 }
@@ -1679,7 +1664,7 @@ p {
   gap: 0.5rem;
   font-family: var(--font-body);
   font-size: var(--body-sm);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   letter-spacing: var(--tracking-wide);
 }
 
@@ -1692,7 +1677,6 @@ p {
   text-transform: uppercase;
   letter-spacing: var(--tracking-ultra);
   color: var(--text-muted);
-  opacity: 0.7;
 }
 
 /* Description excerpt */
@@ -1772,9 +1756,12 @@ p {
 .featured-work__cta {
   display: flex;
   justify-content: center;
-  margin-top: var(--space-xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-md);
+}
+
+.featured-work__cta .btn {
+  padding: 1.25rem 3rem;
+  font-size: var(--body-sm);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -1863,9 +1850,9 @@ p {
     justify-content: flex-start;
   }
   
-  /* Poster styling for tablet */
+  /* Poster styling for tablet - auto width */
   .spotlight-card__poster {
-    max-width: 380px;
+    max-width: 400px;
   }
   
   .spotlight-card__title {
@@ -1999,11 +1986,10 @@ p {
 }
 
 .work-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-lg);
+  column-count: 2;
+  column-gap: var(--space-lg);
   margin-bottom: var(--space-xl);
-  max-width: 900px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -2011,7 +1997,8 @@ p {
 .work-card {
   position: relative;
   display: block;
-  aspect-ratio: 2 / 3;
+  break-inside: avoid;
+  margin-bottom: var(--space-lg);
   overflow: hidden;
   background: var(--bg-card);
   transition: transform var(--transition-cinematic), opacity var(--transition-cinematic);
@@ -2068,15 +2055,14 @@ p {
 }
 
 .work-card__media {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  line-height: 0;
 }
 
 .work-card__media img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  height: auto;
+  display: block;
   transition: transform var(--transition-cinematic), filter var(--transition-slow);
   /* Desaturated by default */
   filter: grayscale(50%) contrast(1.1);
@@ -2090,13 +2076,15 @@ p {
 
 .work-card__overlay {
   position: absolute;
-  inset: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: linear-gradient(
     to top,
     rgba(3, 3, 3, 0.98) 0%,
-    rgba(3, 3, 3, 0.7) 30%,
-    rgba(3, 3, 3, 0.2) 50%,
-    transparent 70%
+    rgba(3, 3, 3, 0.8) 40%,
+    rgba(3, 3, 3, 0.3) 70%,
+    transparent 100%
   );
   display: flex;
   flex-direction: column;
@@ -2163,8 +2151,12 @@ p {
 
 @media (max-width: 768px) {
   .work-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-sm);
+    column-count: 1;
+    column-gap: var(--space-sm);
+  }
+  
+  .work-card {
+    margin-bottom: var(--space-md);
   }
 
   .work-card__overlay {
@@ -2177,8 +2169,8 @@ p {
 }
 
 @media (max-width: 540px) {
-  .work-grid {
-    gap: 0.75rem;
+  .work-card {
+    margin-bottom: var(--space-sm);
   }
 
   .work-card__title {
@@ -2224,17 +2216,53 @@ p {
   transform: translateX(-4px);
 }
 
-.project-page__video {
-  position: relative;
-  aspect-ratio: 2.35 / 1;
-  max-width: 1100px;
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROJECT HERO — Video/Poster + Header Layout
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.project-page__hero {
+  max-width: 1200px;
   margin: 0 auto var(--space-xl);
+}
+
+/* Video layout (stacked) */
+.project-page__hero--video {
+  display: block;
+  max-width: 1100px;
+}
+
+/* Landscape poster layout (stacked) */
+.project-page__hero--landscape {
+  display: block;
+}
+
+/* Portrait poster layout (two columns on desktop) */
+.project-page__hero--portrait {
+  display: grid;
+  grid-template-columns: auto minmax(320px, 650px);
+  gap: var(--space-lg);
+  align-items: center;
+  justify-content: center;
+  max-width: none;
+}
+
+.project-page__hero--portrait .project-page__header {
+  max-width: 650px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MEDIA CONTAINER — Video or Poster
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.project-page__media {
+  position: relative;
   overflow: hidden;
   background: var(--bg-card);
+  line-height: 0;
 }
 
 /* Frame border */
-.project-page__video::before {
+.project-page__media::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -2243,14 +2271,60 @@ p {
   pointer-events: none;
 }
 
-.project-page__video iframe {
+/* Video embed */
+.project-page__media--video {
+  aspect-ratio: 2.35 / 1;
+  margin-bottom: var(--space-xl);
+}
+
+.project-page__media--video iframe {
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.project-page__content {
+/* Landscape poster */
+.project-page__media--landscape {
+  max-width: 900px;
+  margin: 0 auto var(--space-xl);
+}
+
+/* Portrait poster - sized to fit image naturally */
+.project-page__media--portrait {
+  width: auto;
+  max-width: 500px;
+}
+
+/* Poster image - displays at natural proportions */
+.project-page__poster-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   HEADER — Title, Subtitle, Meta, Nominations
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.project-page__header {
   max-width: 800px;
+  margin: 0 auto;
+}
+
+/* When in portrait layout, header is beside poster */
+.project-page__hero--portrait .project-page__header {
+  max-width: none;
+  margin: 0;
+}
+
+/* Reduce bottom margin on nominations in portrait layout */
+.project-page__hero--portrait .project-page__nominations {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.project-page__content {
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -2291,22 +2365,117 @@ p {
   align-items: center;
   gap: 0.75rem;
   font-family: var(--font-body);
-  font-size: var(--body-sm);
+  font-size: var(--body);
   font-weight: 400;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   letter-spacing: var(--tracking-normal);
 }
 
 .project-page__meta span::before {
   content: "";
-  width: 3px;
-  height: 3px;
+  width: 4px;
+  height: 4px;
   background: var(--accent-primary);
   border-radius: 50%;
 }
 
 .project-page__meta span:first-child::before {
   display: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   PROJECT NOMINATIONS — Film Festival Laurel Style
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.project-page__nominations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  justify-content: flex-start;
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg) 0;
+}
+
+.project-page__nomination {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.12) 0%, rgba(212, 165, 116, 0.06) 100%);
+  border: 1px solid rgba(212, 165, 116, 0.35);
+  border-radius: 4px;
+  position: relative;
+  transition: all var(--transition-slow);
+}
+
+.project-page__nomination:hover {
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.18) 0%, rgba(212, 165, 116, 0.1) 100%);
+  border-color: var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.15);
+}
+
+.nomination__laurel {
+  width: 24px;
+  height: 48px;
+  color: var(--accent-primary);
+  opacity: 0.9;
+  flex-shrink: 0;
+  transition: opacity var(--transition-slow);
+}
+
+.project-page__nomination:hover .nomination__laurel {
+  opacity: 1;
+}
+
+.nomination__laurel--left svg {
+  transform: scaleX(1);
+}
+
+.nomination__laurel--right svg {
+  transform: scaleX(-1);
+}
+
+.nomination__text {
+  font-family: var(--font-body);
+  font-size: var(--body-sm);
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .project-page__nominations {
+    gap: var(--space-sm);
+  }
+  
+  .project-page__nomination {
+    padding: 0.5rem 1rem;
+  }
+  
+  .nomination__laurel {
+    width: 18px;
+    height: 36px;
+  }
+  
+  .nomination__text {
+    font-size: var(--body-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .project-page__nominations {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .project-page__nomination {
+    justify-content: center;
+  }
 }
 
 .project-page__description {
@@ -2322,10 +2491,10 @@ p {
 
 .project-page__credits h3 {
   font-family: var(--font-body);
-  font-size: var(--body-xs);
+  font-size: var(--body-sm);
   font-weight: 500;
   margin-bottom: var(--space-md);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: var(--tracking-ultra);
 }
@@ -2342,8 +2511,34 @@ p {
 }
 
 .project-page__credit-role {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-weight: 300;
+}
+
+@media (max-width: 1024px) {
+  /* Stack portrait layout on tablet */
+  .project-page__hero--portrait {
+    display: block;
+    max-width: 800px;
+  }
+  
+  .project-page__hero--portrait .project-page__media {
+    max-width: 400px;
+    margin: 0 auto var(--space-lg);
+  }
+  
+  .project-page__hero--portrait .project-page__header {
+    text-align: center;
+    max-width: none;
+  }
+  
+  .project-page__hero--portrait .project-page__meta {
+    justify-content: center;
+  }
+  
+  .project-page__hero--portrait .project-page__nominations {
+    justify-content: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2351,8 +2546,16 @@ p {
     padding-top: 100px;
   }
 
-  .project-page__video {
+  .project-page__media--video {
     aspect-ratio: 16 / 9;
+  }
+  
+  .project-page__media--landscape {
+    max-width: 100%;
+  }
+  
+  .project-page__media--portrait {
+    max-width: 100%;
   }
 }
 
@@ -2398,7 +2601,7 @@ p {
 
 .contact-page__subheading {
   font-size: var(--body-lg);
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 .contact-form {
@@ -2478,7 +2681,7 @@ p {
 .contact-page__direct-text {
   margin-bottom: var(--space-sm);
   font-size: var(--body-sm);
-  color: var(--text-muted);
+  color: var(--text-secondary);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
 }
