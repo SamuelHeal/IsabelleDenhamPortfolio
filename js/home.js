@@ -623,7 +623,7 @@ function renderFeaturedWork() {
     return `
       <article class="spotlight-card${borderClass}" data-index="${index}">
         <div class="spotlight-card__poster">
-          <a href="project.html?id=${project.id}" class="spotlight-card__poster-link">
+          <a href="project.html?id=${project.id}&from=home" class="spotlight-card__poster-link">
             <img 
               src="${thumbnailUrl}" 
               alt="${project.title} poster"
@@ -636,7 +636,7 @@ function renderFeaturedWork() {
           <span class="spotlight-card__type">${project.type}</span>
           
           <h3 class="spotlight-card__title">
-            <a href="project.html?id=${project.id}">${project.title}</a>
+            <a href="project.html?id=${project.id}&from=home">${project.title}</a>
           </h3>
           
           ${project.subtitle ? `<p class="spotlight-card__tagline">${project.subtitle}</p>` : ''}
@@ -648,7 +648,7 @@ function renderFeaturedWork() {
           ${description ? `<p class="spotlight-card__description">${description}</p>` : ''}
           
           <div class="spotlight-card__cta">
-            <a href="project.html?id=${project.id}" class="spotlight-card__cta-btn">
+            <a href="project.html?id=${project.id}&from=home" class="spotlight-card__cta-btn">
               View Project
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 12h14M12 5l7 7-7 7"/>

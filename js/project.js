@@ -19,6 +19,7 @@ document.addEventListener('content-ready', () => {
 function renderProjectPage() {
   const urlParams = new URLSearchParams(window.location.search);
   const projectId = urlParams.get('id');
+  const fromPage = urlParams.get('from');
   
   if (!projectId) {
     window.location.href = 'work.html';
@@ -30,6 +31,18 @@ function renderProjectPage() {
   if (!project) {
     window.location.href = 'work.html';
     return;
+  }
+  
+  // Update back button based on referrer
+  const backButton = document.querySelector('.project-page__back');
+  if (backButton && fromPage === 'home') {
+    backButton.href = 'index.html';
+    backButton.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Home
+    `;
   }
   
   // Update page title
