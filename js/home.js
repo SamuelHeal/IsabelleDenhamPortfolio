@@ -617,8 +617,11 @@ function renderFeaturedWork() {
       metaItems.push(`<div class="spotlight-card__meta-item"><span class="spotlight-card__meta-label">Role:</span> <span>${project.role}</span></div>`);
     }
     
+    // Check if border should be shown
+    const borderClass = project.show_home_border ? ' spotlight-card--bordered' : '';
+    
     return `
-      <article class="spotlight-card" data-index="${index}">
+      <article class="spotlight-card${borderClass}" data-index="${index}">
         <div class="spotlight-card__poster">
           <a href="project.html?id=${project.id}&from=home" class="spotlight-card__poster-link">
             <img 
