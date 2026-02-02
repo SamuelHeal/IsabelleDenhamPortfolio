@@ -1238,6 +1238,9 @@ p {
   font-size: var(--body-lg);
   max-width: 480px;
   color: var(--text-secondary);
+  text-align: justify;
+  hyphens: auto;
+  -webkit-hyphens: auto;
 }
 
 .about__image-wrapper {
@@ -1502,11 +1505,50 @@ p {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   z-index: 3;
   pointer-events: none;
-  transition: box-shadow var(--transition-slow);
+  transition: box-shadow var(--transition-slow), border-color var(--transition-slow);
 }
 
 .spotlight-card:hover .spotlight-card__poster::before {
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SPOTLIGHT CARD — Optional Cinematic Border (per-project setting)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.spotlight-card--bordered .spotlight-card__poster::before {
+  border: 1px solid var(--border-accent);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              inset 0 0 0 1px rgba(var(--accent-rgb), 0.1);
+}
+
+.spotlight-card--bordered:hover .spotlight-card__poster::before {
+  border-color: var(--accent-primary);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5),
+              0 0 30px rgba(var(--accent-rgb), 0.15),
+              inset 0 0 0 1px rgba(var(--accent-rgb), 0.2);
+}
+
+/* Corner accent for bordered cards */
+.spotlight-card--bordered .spotlight-card__poster::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 50px;
+  height: 50px;
+  border-top: 1px solid var(--accent-primary);
+  border-left: 1px solid var(--accent-primary);
+  opacity: 0.5;
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity var(--transition-slow), width var(--transition-slow), height var(--transition-slow);
+}
+
+.spotlight-card--bordered:hover .spotlight-card__poster::after {
+  opacity: 0.8;
+  width: 70px;
+  height: 70px;
 }
 
 .spotlight-card__poster-link {
@@ -1751,9 +1793,7 @@ p {
 .featured-work__cta {
   display: flex;
   justify-content: center;
-  margin-top: var(--space-xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid var(--border-subtle);
+  margin-top: var(--space-md);
 }
 
 .featured-work__cta .btn--primary {
