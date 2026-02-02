@@ -472,15 +472,30 @@
         </div>
         
         <div class="form-group">
-          <label class="form-label">Nominations / Awards</label>
-          <textarea id="project-nominations" class="form-textarea" rows="3" placeholder="Official Selection - Film Festival Name&#10;Best Short Film - Awards Ceremony&#10;Audience Choice Award - Festival 2025"></textarea>
-          <small class="form-hint">Enter each nomination or award on a new line. These will be displayed with special laurel styling on the project page.</small>
+          <label class="form-label">Awards & Nominations</label>
+          <div class="awards-list" id="awards-list">
+            <!-- Awards added dynamically -->
+          </div>
+          <button type="button" class="btn btn--secondary btn--sm" id="add-award-btn" style="margin-top: 0.75rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Add Award
+          </button>
+          <small class="form-hint">Add awards and nominations with their status. Won awards will be displayed with gold styling.</small>
         </div>
         
         <div class="form-group">
           <label class="form-checkbox">
             <input type="checkbox" id="project-featured">
             Feature on home page
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-checkbox">
+            <input type="checkbox" id="project-show-border">
+            Show border on home page
           </label>
         </div>
       </div>

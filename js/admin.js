@@ -495,6 +495,11 @@ function setupProjectListeners() {
     contentManager.exportJSON();
     showAlert('success', 'Backup exported!');
   });
+  
+  // Add award button
+  document.getElementById('add-award-btn')?.addEventListener('click', () => {
+    addAwardEntry();
+  });
 }
 
 function renderProjectsList() {
@@ -563,7 +568,7 @@ window.editProject = function(projectId) {
   document.getElementById('project-video-type').value = project.video_type || 'youtube';
   document.getElementById('project-video-id').value = project.video_id || '';
   document.getElementById('project-description').value = project.description || '';
-  document.getElementById('project-nominations').value = project.nominations || '';
+  populateAwards(project.awards || project.nominations || []);
   document.getElementById('project-featured').checked = project.featured || false;
   document.getElementById('project-show-border').checked = project.show_home_border || false;
   
@@ -584,7 +589,7 @@ function clearProjectForm() {
   document.getElementById('project-video-type').value = 'youtube';
   document.getElementById('project-video-id').value = '';
   document.getElementById('project-description').value = '';
-  document.getElementById('project-nominations').value = '';
+  clearAwards();
   document.getElementById('project-featured').checked = false;
   document.getElementById('project-show-border').checked = false;
   document.getElementById('thumbnail-preview').innerHTML = '';
@@ -607,7 +612,7 @@ async function saveProject() {
     video_type: document.getElementById('project-video-type').value,
     video_id: document.getElementById('project-video-id').value,
     description: document.getElementById('project-description').value,
-    nominations: document.getElementById('project-nominations').value,
+    awards: getAwardsData(),
     featured: document.getElementById('project-featured').checked,
     show_home_border: document.getElementById('project-show-border').checked
   };
@@ -651,6 +656,105 @@ async function deleteProject() {
 function closeModal() {
   document.getElementById('project-modal').classList.remove('active');
   editingProject = null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AWARDS MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+
+let awardCounter = 0;
+
+function addAwardEntry(awardData = null) {
+  const container = document.getElementById('awards-list');
+  if (!container) return;
+  
+  const entryId = `award-${awardCounter++}`;
+  const entry = document.createElement('div');
+  entry.className = 'award-entry';
+  entry.id = entryId;
+  
+  entry.innerHTML = `
+    <div class="award-entry__fields">
+      <div class="award-entry__row">
+        <div class="award-entry__field award-entry__field--name">
+          <input type="text" class="form-input form-input--sm award-name" placeholder="Award name (e.g., Best Short Film)" value="${awardData?.name || ''}">
+        </div>
+        <div class="award-entry__field award-entry__field--source">
+          <input type="text" class="form-input form-input--sm award-source" placeholder="Source (e.g., Sundance)" value="${awardData?.source || ''}">
+        </div>
+        <div class="award-entry__field award-entry__field--status">
+          <select class="form-select form-select--sm award-status">
+            <option value="nominated" ${awardData?.status === 'nominated' ? 'selected' : ''}>Nominated</option>
+            <option value="won" ${awardData?.status === 'won' ? 'selected' : ''}>Won</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn--ghost btn--icon award-remove" onclick="removeAwardEntry('${entryId}')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `;
+  
+  container.appendChild(entry);
+}
+
+window.removeAwardEntry = function(entryId) {
+  const entry = document.getElementById(entryId);
+  if (entry) {
+    entry.remove();
+  }
+};
+
+function getAwardsData() {
+  const container = document.getElementById('awards-list');
+  if (!container) return [];
+  
+  const entries = container.querySelectorAll('.award-entry');
+  const awards = [];
+  
+  entries.forEach(entry => {
+    const name = entry.querySelector('.award-name')?.value?.trim();
+    const source = entry.querySelector('.award-source')?.value?.trim();
+    const status = entry.querySelector('.award-status')?.value || 'nominated';
+    
+    if (name) {
+      awards.push({ name, source, status });
+    }
+  });
+  
+  return awards;
+}
+
+function populateAwards(awards) {
+  const container = document.getElementById('awards-list');
+  if (!container) return;
+  
+  // Clear existing entries
+  container.innerHTML = '';
+  awardCounter = 0;
+  
+  // If awards is a string (legacy format), convert to array
+  if (typeof awards === 'string' && awards.trim()) {
+    const lines = awards.split('\n').filter(n => n.trim());
+    lines.forEach(line => {
+      const parts = line.trim().split(' - ');
+      const name = parts[0] || line.trim();
+      const source = parts[1] || '';
+      addAwardEntry({ name, source, status: 'nominated' });
+    });
+  } else if (Array.isArray(awards)) {
+    awards.forEach(award => addAwardEntry(award));
+  }
+}
+
+function clearAwards() {
+  const container = document.getElementById('awards-list');
+  if (container) {
+    container.innerHTML = '';
+    awardCounter = 0;
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

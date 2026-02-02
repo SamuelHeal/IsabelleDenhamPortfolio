@@ -123,32 +123,54 @@ function renderProjectPage() {
     description.innerHTML = formatTextWithLineBreaks(project.description || '');
   }
   
-  // Update nominations (displayed above description with laurel styling)
+  // Update awards (displayed in award wreath grid)
   const nominationsSection = document.getElementById('project-nominations');
   if (nominationsSection) {
-    const nominations = project.nominations;
+    // Support both new awards array format and legacy nominations string
+    let awardsList = [];
     
-    if (nominations && nominations.trim()) {
-      // Split by newlines and filter empty lines
-      const nominationsList = nominations.split('\n').filter(n => n.trim());
-      
+    if (Array.isArray(project.awards) && project.awards.length > 0) {
+      awardsList = project.awards;
+    } else if (project.nominations && project.nominations.trim()) {
+      // Legacy format: convert plain text to awards array
+      const lines = project.nominations.split('\n').filter(n => n.trim());
+      awardsList = lines.map(line => {
+        const parts = line.trim().split(' - ');
+        return {
+          name: parts[0] || line.trim(),
+          source: parts[1] || '',
+          status: 'nominated'
+        };
+      });
+    }
+    
+    if (awardsList.length > 0) {
       nominationsSection.innerHTML = `
         <div class="project-page__nominations">
-          ${nominationsList.map(nomination => `
-            <div class="project-page__nomination">
-              <div class="nomination__laurel nomination__laurel--left">
-                <svg viewBox="0 0 40 80" fill="currentColor">
-                  <path d="M38 40c0-8-4-15-10-20 2-4 2-9 0-13-4 6-10 10-18 10 0 6 2 11 6 15-4 4-6 9-6 15s2 11 6 15c-4 4-6 9-6 15 8 0 14-4 18-10 2-4 2-9 0-13 6-5 10-12 10-20z"/>
-                </svg>
+          ${awardsList.map(award => {
+            const isWon = award.status === 'won';
+            const statusClass = isWon ? 'project-page__nomination--won' : 'project-page__nomination--nominated';
+            const statusLabel = isWon ? 'Winner' : 'Nominated';
+            
+            return `
+            <div class="project-page__nomination ${statusClass}">
+              <div class="nomination__wreath-container">
+                <div class="nomination__wreath">
+                  <img src="https://res.cloudinary.com/dzgjkx0pm/image/upload/v1748274197/award_ox3egn.png" alt="" aria-hidden="true" />
+                </div>
+                <div class="nomination__stars">
+                  <span class="nomination__star nomination__star--small">★</span>
+                  <span class="nomination__star nomination__star--large">★</span>
+                  <span class="nomination__star nomination__star--small">★</span>
+                </div>
+                <div class="nomination__content">
+                  <span class="nomination__status-badge">${statusLabel}</span>
+                  <span class="nomination__title">${award.name.replace(/ /g, '<br />')}</span>
+                </div>
               </div>
-              <span class="nomination__text">${nomination.trim()}</span>
-              <div class="nomination__laurel nomination__laurel--right">
-                <svg viewBox="0 0 40 80" fill="currentColor">
-                  <path d="M2 40c0-8 4-15 10-20-2-4-2-9 0-13 4 6 10 10 18 10 0 6-2 11-6 15 4 4 6 9 6 15s-2 11-6 15c4 4 6 9 6 15-8 0-14-4-18-10-2-4-2-9 0-13-6-5-10-12-10-20z"/>
-                </svg>
-              </div>
+              ${award.source ? `<span class="nomination__source">${award.source}</span>` : ''}
             </div>
-          `).join('')}
+          `}).join('')}
         </div>
       `;
       nominationsSection.style.display = 'block';
