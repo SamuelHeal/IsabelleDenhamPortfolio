@@ -107,14 +107,26 @@ function renderProjectPage() {
     subtitle.style.display = project.subtitle ? 'block' : 'none';
   }
   
+  // Update project type label (with optional status)
+  const typeLabel = document.getElementById('project-type');
+  if (typeLabel) {
+    if (project.status && project.status.trim()) {
+      typeLabel.innerHTML = `${project.type} <span class="project-page__status">• ${project.status}</span>`;
+    } else {
+      typeLabel.textContent = project.type;
+    }
+  }
+  
   // Update meta
   const meta = document.getElementById('project-meta');
   if (meta) {
-    meta.innerHTML = `
-      <span>${project.type}</span>
-      <span>${project.year}</span>
-      <span>${project.role}</span>
-    `;
+    const metaItems = [
+      project.type,
+      project.year,
+      project.role
+    ].filter(item => item && item.trim());
+    
+    meta.innerHTML = metaItems.map(item => `<span>${item}</span>`).join('');
   }
   
   // Update description (with line break support)
@@ -123,7 +135,7 @@ function renderProjectPage() {
     description.innerHTML = formatTextWithLineBreaks(project.description || '');
   }
   
-  // Update awards (displayed in award wreath grid)
+  // Update awards (displayed in editorial typography grid)
   const nominationsSection = document.getElementById('project-nominations');
   if (nominationsSection) {
     // Support both new awards array format and legacy nominations string
@@ -147,29 +159,19 @@ function renderProjectPage() {
     if (awardsList.length > 0) {
       nominationsSection.innerHTML = `
         <div class="project-page__nominations">
-          ${awardsList.map(award => {
+          ${awardsList.map((award, index) => {
             const isWon = award.status === 'won';
-            const statusClass = isWon ? 'project-page__nomination--won' : 'project-page__nomination--nominated';
+            const statusClass = isWon ? 'award--won' : 'award--nominated';
             const statusLabel = isWon ? 'Winner' : 'Nominated';
             
             return `
-            <div class="project-page__nomination ${statusClass}">
-              <div class="nomination__wreath-container">
-                <div class="nomination__wreath">
-                  <img src="https://res.cloudinary.com/dzgjkx0pm/image/upload/v1748274197/award_ox3egn.png" alt="" aria-hidden="true" />
-                </div>
-                <div class="nomination__stars">
-                  <span class="nomination__star nomination__star--small">★</span>
-                  <span class="nomination__star nomination__star--large">★</span>
-                  <span class="nomination__star nomination__star--small">★</span>
-                </div>
-                <div class="nomination__content">
-                  <span class="nomination__status-badge">${statusLabel}</span>
-                  <span class="nomination__title">${award.name.replace(/ /g, '<br />')}</span>
-                </div>
-              </div>
-              ${award.source ? `<span class="nomination__source">${award.source}</span>` : ''}
-            </div>
+            <article class="award ${statusClass}" style="--award-index: ${index}">
+              <div class="award__line"></div>
+              <span class="award__status">${statusLabel}</span>
+              <h3 class="award__title">${award.name}</h3>
+              ${award.source ? `<span class="award__source">${award.source}</span>` : ''}
+              <div class="award__line award__line--bottom"></div>
+            </article>
           `}).join('')}
         </div>
       `;

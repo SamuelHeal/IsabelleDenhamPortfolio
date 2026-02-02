@@ -564,6 +564,7 @@ window.editProject = function(projectId) {
   document.getElementById('project-type').value = project.type;
   document.getElementById('project-year').value = project.year || '';
   document.getElementById('project-role').value = project.role || '';
+  document.getElementById('project-status').value = project.status || '';
   document.getElementById('project-thumbnail').value = project.thumbnail_url || '';
   document.getElementById('project-video-type').value = project.video_type || 'youtube';
   document.getElementById('project-video-id').value = project.video_id || '';
@@ -586,6 +587,7 @@ function clearProjectForm() {
   document.getElementById('project-type').value = 'Documentary';
   document.getElementById('project-year').value = new Date().getFullYear();
   document.getElementById('project-role').value = '';
+  document.getElementById('project-status').value = '';
   document.getElementById('project-thumbnail').value = '';
   document.getElementById('project-video-type').value = 'youtube';
   document.getElementById('project-video-id').value = '';
@@ -612,6 +614,7 @@ async function saveProject() {
     type: document.getElementById('project-type').value,
     year: document.getElementById('project-year').value,
     role: document.getElementById('project-role').value,
+    status: document.getElementById('project-status').value || null,
     thumbnail_url: document.getElementById('project-thumbnail').value,
     video_type: document.getElementById('project-video-type').value,
     video_id: document.getElementById('project-video-id').value,
