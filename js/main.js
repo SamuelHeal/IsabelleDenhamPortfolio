@@ -50,10 +50,22 @@ async function initializeSite() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DEFAULT_ACCENT_COLOR = '#d4a574';
+const ACCENT_COLOR_CACHE_KEY = 'iz_accent_color';
+
+// Apply cached accent color immediately (before async content loads)
+function applyCachedAccentColor() {
+  const cachedColor = localStorage.getItem(ACCENT_COLOR_CACHE_KEY);
+  if (cachedColor) {
+    applyAccentColorToDocument(cachedColor);
+  }
+}
 
 function applyAccentColor() {
   const settings = contentManager.getSettings();
   const accentColor = settings?.accent_color || DEFAULT_ACCENT_COLOR;
+  
+  // Cache for next page load
+  localStorage.setItem(ACCENT_COLOR_CACHE_KEY, accentColor);
   
   applyAccentColorToDocument(accentColor);
 }
@@ -390,6 +402,9 @@ export const socialIcons = {
 // ─────────────────────────────────────────────────────────────────────────────
 // START
 // ─────────────────────────────────────────────────────────────────────────────
+
+// Apply cached accent color immediately (before DOM ready) so loader uses correct color
+applyCachedAccentColor();
 
 document.addEventListener('DOMContentLoaded', initializeSite);
 
